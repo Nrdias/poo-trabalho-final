@@ -6,10 +6,7 @@ import java.awt.*;
 public class Programa extends JFrame {
     JPanel mainPanel;
 
-    JPanel panel;
-    JButton button;
-
-    public Programa(){
+    public Programa() {
         super("Programa");
 
         initMainPanel();
@@ -19,6 +16,7 @@ public class Programa extends JFrame {
         this.setVisible(true);
         this.setSize(500, 500);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
     }
 
 
@@ -30,47 +28,44 @@ public class Programa extends JFrame {
         this.mainPanel.setLayout(new GridLayout(7, 1));
 
         JLabel title = new JLabel("ACME Resgate :)");
+        title.setFont(title.getFont().deriveFont(24.0F));
         this.mainPanel.add(title);
 
         JButton cadastrarEvento = new JButton("Cadastrar Evento");
         cadastrarEvento.addActionListener(e -> {
             // apenas cria o painel e muda para ele
-            JPanel panel = new CadastroEvento();
-            this.changePanel(panel);
+            this.changePanel(new CadastroEvento());
         });
 
         this.mainPanel.add(cadastrarEvento);
 
+        JButton cadastrarEquipe = new JButton("Cadastrar Equipe");
+        cadastrarEquipe.addActionListener(e -> {
+            this.changePanel(new CadastroEquipe());
+        });
+        this.mainPanel.add(cadastrarEquipe);
 
-        // TODO: criar uma classe para cada painel, alterar variável `button` para uma mais específica.
+        JButton cadastrarEquipamento = new JButton("Cadastrar Equipamento");
+        cadastrarEquipamento.addActionListener(e -> {
+            this.changePanel(new CadastroEquipamento());
+        });
+        this.mainPanel.add(cadastrarEquipamento);
 
-        button = new JButton("Cadastrar Equipe");
-        button.addActionListener(e -> {
-            this.setContentPane(this.setCadastrarEquipe());
-            this.setVisible(true);
+        JButton cadastrarAtendimento = new JButton("Cadastrar Atendimento");
+        cadastrarAtendimento.addActionListener(e -> {
+            this.changePanel(new CadastroAtendimento());
         });
-        this.mainPanel.add(button);
-        button = new JButton("Cadastrar Equipamento");
-        button.addActionListener(e -> {
-            this.setContentPane(this.setCadastrarEquipamento());
-            this.setVisible(true);
+        this.mainPanel.add(cadastrarAtendimento);
+
+        JButton mostrarRelatorio = new JButton("Mostrar Relatório");
+        mostrarRelatorio.addActionListener(e -> {
+            this.changePanel(new Relatorio());
         });
-        this.mainPanel.add(button);
-        button = new JButton("Cadastrar Atendimento");
-        button.addActionListener(e -> {
-            this.setContentPane(this.setCadastrarAtendimento());
-            this.setVisible(true);
-        });
-        this.mainPanel.add(button);
-        button = new JButton("Mostrar Relatório");
-        button.addActionListener(e -> {
-            this.setContentPane(this.setMostrarRelatorio());
-            this.setVisible(true);
-        });
-        this.mainPanel.add(button);
+        this.mainPanel.add(mostrarRelatorio);
 
         JButton sair = new JButton("Sair");
         sair.addActionListener(e -> {
+            // TODO: mensagem de confirmação?
             System.exit(0);
         });
         this.mainPanel.add(sair);
@@ -99,26 +94,5 @@ public class Programa extends JFrame {
 
         this.setContentPane(newPanel);
         this.setVisible(true);
-    }
-
-    // TODO: remover esses métodos e implementar uma classe por tela
-    private JPanel setMostrarRelatorio() {
-        panel = new JPanel();
-        return panel;
-    }
-
-    private JPanel setCadastrarAtendimento() {
-        panel = new JPanel();
-        return panel;
-    }
-
-    private JPanel setCadastrarEquipamento() {
-        panel = new JPanel();
-        return panel;
-    }
-
-    private JPanel setCadastrarEquipe() {
-        panel = new JPanel();
-        return panel;
     }
 }
