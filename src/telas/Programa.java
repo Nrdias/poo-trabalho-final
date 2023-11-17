@@ -2,6 +2,8 @@ package telas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Programa extends JFrame {
     JPanel mainPanel;
@@ -15,7 +17,8 @@ public class Programa extends JFrame {
 
         this.setVisible(true);
         this.setSize(500, 500);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.pack();
     }
 
@@ -66,7 +69,13 @@ public class Programa extends JFrame {
         JButton sair = new JButton("Sair");
         sair.addActionListener(e -> {
             // TODO: mensagem de confirmação?
-            System.exit(0);
+            int confirmed = JOptionPane.showConfirmDialog(null,
+                    "Você realmente quer sair?", ":(",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmed == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
         });
         this.mainPanel.add(sair);
     }
