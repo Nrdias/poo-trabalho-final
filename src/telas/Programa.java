@@ -1,13 +1,15 @@
+package telas;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Programa extends JFrame {
     JPanel menu, cadastrarEvento, cadastrarEquipe, cadastrarEquipamento, cadastrarAtendimento, mostrarRelatório;
     JButton button;
-    GridLayout gridLayout = new GridLayout(2, 1);
+    GridLayout gridLayout = new GridLayout(4, 4);
 
     public Programa(){
-        super("Programa");
+        super("telas.Programa");
         menu = new JPanel();
         menu.setLayout(gridLayout);
         button = new JButton("Cadastrar Evento");
@@ -23,6 +25,7 @@ public class Programa extends JFrame {
         add(menu);
         this.setVisible(true);
         this.setSize(500, 500);
+        this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
