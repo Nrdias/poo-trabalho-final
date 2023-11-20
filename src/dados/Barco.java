@@ -12,4 +12,9 @@ public class Barco extends Equipamento {
 	public int getCapacidade() {
 		return capacidade;
 	}
+
+	@Override
+	public String toString() {
+		return "Barco\n" + super.toString() + "Capacidade: " + capacidade + "\n";
+	}
 }
