@@ -19,4 +19,9 @@ public class Escavadeira extends Equipamento {
 	public double getCarga() {
 		return carga;
 	}
+
+	@Override
+	public String toString() {
+		return "Escavadeira\n" + super.toString() + "Combustível: " + combustivel + "\n" + "Carga: " + carga + "\n";
+	}
 }

@@ -1,5 +1,7 @@
 package telas;
 
+import dados.Aplicacao;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -7,9 +9,12 @@ import java.awt.event.WindowEvent;
 
 public class Programa extends JFrame {
     JPanel mainPanel;
+    Aplicacao app;
 
-    public Programa() {
+    public Programa(Aplicacao app) {
         super("Programa");
+
+        this.app = app;
 
         initMainPanel();
 
@@ -18,8 +23,8 @@ public class Programa extends JFrame {
         this.setVisible(true);
         this.setSize(500, 500);
 
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.pack();
+//        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+//        this.pack();
     }
 
 
@@ -50,7 +55,7 @@ public class Programa extends JFrame {
 
         JButton cadastrarEquipamento = new JButton("Cadastrar Equipamento");
         cadastrarEquipamento.addActionListener(e -> {
-            this.changePanel(new CadastroEquipamento());
+            this.changePanel(new CadastroEquipamento(app));
         });
         this.mainPanel.add(cadastrarEquipamento);
 
