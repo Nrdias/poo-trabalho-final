@@ -49,7 +49,7 @@ public class Programa extends JFrame {
 
         JButton cadastrarEquipe = new JButton("Cadastrar Equipe");
         cadastrarEquipe.addActionListener(e -> {
-            this.changePanel(new CadastroEquipe());
+            this.changePanel(new CadastroEquipe(app));
         });
         this.mainPanel.add(cadastrarEquipe);
 

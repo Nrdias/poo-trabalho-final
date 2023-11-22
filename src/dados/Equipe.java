@@ -32,4 +32,9 @@ public class Equipe {
 	public double getLongitude() {
 		return longitude;
 	}
+
+	public String toString() {
+		return "codinome=" + codinome + ", quantidade=" + quantidade + ", latitude=" + latitude + ", longitude="
+				+ longitude;
+	}
 }
