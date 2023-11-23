@@ -1,6 +1,7 @@
 package dados;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
@@ -18,7 +19,9 @@ public class Aplicacao {
             return false;
         }
 
-        return this.equipamentos.add(e);
+        this.equipamentos.add(e);
+        this.equipamentos.sort(Comparator.comparing(Equipamento::getId));
+        return true;
     }
 
     public boolean addEquipe(Equipe e) {
