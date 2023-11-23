@@ -1,8 +1,8 @@
 package telas;
 
 import dados.*;
+
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class CadastroEquipe extends JPanel {
     private Aplicacao app;
@@ -60,36 +60,39 @@ public class CadastroEquipe extends JPanel {
         this.add(messages);
 
     }
-    private void handleCadastro(){
+
+    private void handleCadastro() {
         String codinome = this.codinome.getText();
         String integrantes = this.integrantes.getText();
         String latitude = this.latitude.getText();
         String longitude = this.longitude.getText();
 
-        if(codinome.isEmpty() || integrantes.isEmpty() || latitude.isEmpty() || longitude.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
-        }else{
-            try{
+        if (codinome.isEmpty() || integrantes.isEmpty() || latitude.isEmpty() || longitude.isEmpty()) {
+            this.messages.setText("Preencha todos os campos!");
+        } else {
+            try {
                 int quantidade = Integer.parseInt(integrantes);
                 double lat = Double.parseDouble(latitude);
                 double lon = Double.parseDouble(longitude);
                 Equipe equipe = new Equipe(codinome, quantidade, lat, lon);
                 this.app.addEquipe(equipe);
-                JOptionPane.showMessageDialog(null, "Equipe cadastrada com sucesso!");
+                this.messages.setText("Equipe cadastrada com sucesso!");
                 this.handleClean();
-            }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!");
+            } catch (NumberFormatException e) {
+                this.messages.setText("Preencha os campos corretamente!");
             }
         }
     }
-    private void handleListEquipes(){
-        JOptionPane.showMessageDialog(null, this.app.equipesToString());
+
+    private void handleListEquipes() {
+        this.messages.setText(this.app.equipesToString());
     }
 
-    private void handleClean(){
+    private void handleClean() {
         this.codinome.setText("");
         this.integrantes.setText("");
         this.latitude.setText("");
         this.longitude.setText("");
+        this.messages.setText("");
     }
 }
