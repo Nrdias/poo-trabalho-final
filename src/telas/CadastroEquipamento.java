@@ -153,7 +153,7 @@ public class CadastroEquipamento extends JPanel {
         // messages area
         gc.gridx = 0;
         gc.gridy++;
-        this.add(messages, gc);
+        this.add(new JScrollPane(messages), gc);
 
 
         this.revalidate();
