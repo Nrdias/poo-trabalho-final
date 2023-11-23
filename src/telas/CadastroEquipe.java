@@ -3,6 +3,7 @@ package telas;
 import dados.*;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class CadastroEquipe extends JPanel {
     private Aplicacao app;
@@ -14,7 +15,7 @@ public class CadastroEquipe extends JPanel {
     public CadastroEquipe(Aplicacao app) {
         super();
         this.app = app;
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setLayout(new GridBagLayout());
 
         labelCodinome = new JLabel("Codinome da Equipe");
         codinome = new JTextField(10);
@@ -46,18 +47,46 @@ public class CadastroEquipe extends JPanel {
             this.handleClean();
         });
 
-        this.add(labelCodinome);
-        this.add(codinome);
-        this.add(labelIntegrantes);
-        this.add(integrantes);
-        this.add(labelLatitude);
-        this.add(latitude);
-        this.add(labelLongitude);
-        this.add(longitude);
-        this.add(cadastrar);
-        this.add(listar);
-        this.add(limpar);
-        this.add(messages);
+        var gc = new GridBagConstraints();
+        gc.fill = GridBagConstraints.BOTH;
+
+        // add labels
+        gc.gridx = 0;
+        gc.gridy = 0;
+        this.add(labelCodinome, gc);
+        gc.gridy++;
+        this.add(labelIntegrantes, gc);
+        gc.gridy++;
+        this.add(labelLatitude, gc);
+        gc.gridy++;
+        this.add(labelLongitude, gc);
+
+        // add text fields
+        gc.gridwidth = 2;
+        gc.gridx = 1;
+        gc.gridy = 0;
+        this.add(codinome, gc);
+        gc.gridy++;
+        this.add(integrantes, gc);
+        gc.gridy++;
+        this.add(latitude, gc);
+        gc.gridy++;
+        this.add(longitude, gc);
+
+        // add buttons
+        gc.gridx = 0;
+        gc.gridy++;
+        gc.gridwidth = 1;
+        this.add(cadastrar, gc);
+        gc.gridx++;
+        this.add(listar, gc);
+        gc.gridx++;
+        this.add(limpar, gc);
+
+        gc.gridwidth = 3;
+        gc.gridx = 0;
+        gc.gridy++;
+        this.add(messages, gc);
 
     }
 
@@ -76,8 +105,8 @@ public class CadastroEquipe extends JPanel {
                 double lon = Double.parseDouble(longitude);
                 Equipe equipe = new Equipe(codinome, quantidade, lat, lon);
                 this.app.addEquipe(equipe);
-                this.messages.setText("Equipe cadastrada com sucesso!");
                 this.handleClean();
+                this.messages.setText("Equipe cadastrada com sucesso!");
             } catch (NumberFormatException e) {
                 this.messages.setText("Preencha os campos corretamente!");
             }
