@@ -10,11 +10,14 @@ public class Equipe {
 
 	private double longitude;
 
+	private Equipamento equipamento;
+
 	public Equipe(String codinome, int quantidade, double latitude, double longitude) {
 		this.codinome = codinome;
 		this.quantidade = quantidade;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.equipamento = null;
 	}
 
 	public String getCodinome() {
@@ -31,5 +34,22 @@ public class Equipe {
 
 	public double getLongitude() {
 		return longitude;
+	}
+
+	public Equipamento getEquipamento() {
+		return equipamento;
+	}
+
+	public void setEquipamento(Equipamento equipamento) {
+		this.equipamento = equipamento;
+	}
+
+	public String toString() {
+		if(equipamento != null) {
+			return "codinome=" + codinome + ", quantidade=" + quantidade + ", latitude=" + latitude + ", longitude="
+					+ longitude + ", equipamento=" + equipamento.getNome();
+		}
+		return "codinome=" + codinome + ", quantidade=" + quantidade + ", latitude=" + latitude + ", longitude="
+				+ longitude;
 	}
 }

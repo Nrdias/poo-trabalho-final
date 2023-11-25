@@ -14,7 +14,7 @@ public class Equipamento {
         this.custoDia = custoDia;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
