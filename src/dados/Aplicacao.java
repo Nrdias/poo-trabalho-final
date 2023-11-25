@@ -6,10 +6,12 @@ import java.util.Comparator;
 public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
     private ArrayList<Equipe> equipes;
+    private ArrayList<Evento> eventos;
 
     public Aplicacao() {
         this.equipamentos = new ArrayList<>();
         this.equipes = new ArrayList<>();
+        this.eventos = new ArrayList<>();
     }
 
     public boolean addEquipamento(Equipamento e) {
@@ -32,15 +34,47 @@ public class Aplicacao {
         }
 
         this.equipes.add(e);
-        this.equipes.sort((o1, o2) -> o1.getCodinome().compareTo(o2.getCodinome()));
+        this.equipes.sort(Comparator.comparing(Equipe::getCodinome));
         return true;
     }
 
-    public String equipesToString(){
+    public boolean addEvento(Evento e) {
+        boolean idUsed = this.eventos.stream().anyMatch((evento) -> (evento.getCodigo().equals(e.getCodigo())));
+
+        if (idUsed) {
+            return false;
+        }
+
+        this.eventos.add(e);
+        this.eventos.sort(Comparator.comparing(Evento::getCodigo));
+        return true;
+    }
+
+    public String equipamentosToString() {
+        StringBuilder str = new StringBuilder("Equipamentos: \n");
+
+        this.equipamentos.forEach((equipamento) -> {
+            str.append(equipamento.toString()).append("\n");
+        });
+
+        return str.toString();
+    }
+
+    public String equipesToString() {
         StringBuilder str = new StringBuilder("Equipes: \n");
 
         this.equipes.forEach((equipe) -> {
             str.append(equipe.toString()).append("\n");
+        });
+
+        return str.toString();
+    }
+
+    public String eventosToString() {
+        StringBuilder str = new StringBuilder("Eventos: \n");
+
+        this.eventos.forEach((evento) -> {
+            str.append(evento.toString()).append("\n");
         });
 
         return str.toString();

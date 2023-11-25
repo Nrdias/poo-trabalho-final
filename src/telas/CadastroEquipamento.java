@@ -325,7 +325,7 @@ public class CadastroEquipamento extends JPanel {
     }
 
     private void handleShowEquipamentos() {
-        this.messages.setText(this.app.toString());
+        this.messages.setText(this.app.equipamentosToString());
     }
 
 

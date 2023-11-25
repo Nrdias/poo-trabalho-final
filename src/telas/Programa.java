@@ -41,10 +41,8 @@ public class Programa extends JFrame {
 
         JButton cadastrarEvento = new JButton("Cadastrar Evento");
         cadastrarEvento.addActionListener(e -> {
-            // apenas cria o painel e muda para ele
-            this.changePanel(new CadastroEvento());
+            this.changePanel(new CadastroEvento(app));
         });
-
         this.mainPanel.add(cadastrarEvento);
 
         JButton cadastrarEquipe = new JButton("Cadastrar Equipe");
