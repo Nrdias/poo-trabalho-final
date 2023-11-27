@@ -4,7 +4,10 @@ import dados.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class CadastroEvento extends JPanel {
     private final Aplicacao app;
@@ -42,7 +45,7 @@ public class CadastroEvento extends JPanel {
 
         // create text fields
         this.codigo = new JTextField(10);
-        this.data = new JTextField(10); // TODO: date picker?
+        this.data = new JTextField(10);
         this.latitude = new JTextField(10);
         this.longitude = new JTextField(10);
         this.type = new JComboBox<>();
@@ -216,9 +219,10 @@ public class CadastroEvento extends JPanel {
             hasErrors = true;
         } else {
             try {
-                parsedDate = new Date(data);
-            } catch (IllegalArgumentException e) {
-                this.messages.append("Data inválida. Deve ser do tipo Date.\n");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                parsedDate = sdf.parse(data);
+            } catch (IllegalArgumentException | ParseException e) {
+                this.messages.append("Data inválida. Deve ter o formato dd/mm/aaaa.\n");
                 hasErrors = true;
             }
         }
@@ -395,6 +399,15 @@ public class CadastroEvento extends JPanel {
             this.messages.setText("");
             return;
         }
+
+        this.velocidadeLabel = null;
+        this.velocidade = null;
+        this.precipitacaoLabel = null;
+        this.precipitacao = null;
+        this.magnitudeLabel = null;
+        this.magnitude = null;
+        this.estiagemLabel = null;
+        this.estiagem = null;
 
         switch (selected) {
             case "Ciclone":
