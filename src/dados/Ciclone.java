@@ -22,6 +22,6 @@ public class Ciclone extends Evento {
 
     @Override
     public String toString() {
-        return "Ciclone\n" + super.toString() + "Velocidade: " + velocidade + "\nPrecipitação: " + precipitacao + "\n";
+        return "Ciclone\n" + super.toString() + "Velocidade: " + velocidade + " km/h\nPrecipitação: " + precipitacao + " mm\n";
     }
 }
