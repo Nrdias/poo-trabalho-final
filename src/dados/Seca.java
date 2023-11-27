@@ -12,4 +12,9 @@ public class Seca extends Evento {
 	public int getEstiagem() {
 		return estiagem;
 	}
+
+	@Override
+	public String toString() {
+		return "Seca\n" + super.toString() + "Estiagem: " + estiagem + "\n";
+	}
 }
