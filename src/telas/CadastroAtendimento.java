@@ -1,7 +1,6 @@
 package telas;
 
-import dados.Aplicacao;
-import dados.Evento;
+import dados.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,7 @@ public class CadastroAtendimento extends JPanel {
         }, app.getEventos());
         this.confirmar = new JButton("Confirmar");
 
-        this.setLayout(new GridBagLayout());
+        this.setLayout(new BorderLayout());
 
         this.draw();
     }
@@ -34,20 +33,10 @@ public class CadastroAtendimento extends JPanel {
     private void draw() {
         this.removeAll();
 
-        GridBagConstraints gc = new GridBagConstraints();
+        this.add(new JLabel("Selecione um evento:" ), BorderLayout.NORTH);
 
-        gc.fill = GridBagConstraints.BOTH;
-        gc.gridx = 0;
-        gc.gridy = 0;
-        this.add(new JLabel("Cadastrar Atendimento"), gc);
+        this.add(eventos, BorderLayout.CENTER);
 
-        gc.gridy++;
-        gc.weighty = 1;
-        this.add(eventos, gc);
-
-        gc.gridy++;
-        gc.weighty = 0;
-        this.add(confirmar, gc);
 
         this.revalidate();
         this.repaint();
@@ -59,9 +48,7 @@ class PainelDeEventos extends JPanel {
     private Function<Evento, Void> onEventoChange;
     private ArrayList<Evento> eventos;
 
-    public PainelDeEventos() {
-        this(evento -> null, new ArrayList<>());
-    }
+    private JPanel eventosContainer;
 
     public PainelDeEventos(Function<Evento, Void> onEventoChange, ArrayList<Evento> eventos) {
         super();
@@ -69,83 +56,135 @@ class PainelDeEventos extends JPanel {
         this.onEventoChange = onEventoChange;
         this.eventos = eventos;
 
+        this.eventosContainer = new JPanel();
+        this.eventosContainer.setLayout(new BoxLayout(this.eventosContainer, BoxLayout.Y_AXIS));
+
         this.draw();
-    }
-
-    public void setOnEventoChange(Function<Evento, Void> onEventoChange) {
-        this.onEventoChange = onEventoChange;
-    }
-
-    public void setEventos(ArrayList<Evento> eventos) {
-        this.eventos = eventos;
     }
 
     private void draw() {
         this.removeAll();
 
-        this.setLayout(new GridBagLayout());
+        this.eventos.forEach((evento) -> {
+            EventoCard card = new EventoCard(evento, this.onEventoChange);
+            this.eventosContainer.add(card);
+        });
 
-        GridBagConstraints gc = new GridBagConstraints();
+        // TODO: this is not working
+        JScrollPane scroll = new JScrollPane(this.eventosContainer);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setMaximumSize(new Dimension(400, 400));
 
-        gc.fill = GridBagConstraints.BOTH;
-        gc.gridx = 0;
-        gc.gridy = 0;
-        this.add(new JLabel("Eventos"), gc);
-
-        gc.gridy++;
-        gc.weighty = 1;
-        this.add(new JScrollPane(new ListaDeEventos(eventos, evento -> {
-            onEventoChange.apply(evento);
-            return null;
-        })), gc);
+        this.add(scroll);
 
         this.revalidate();
         this.repaint();
     }
 }
 
-class ListaDeEventos extends JPanel {
-    private ArrayList<Evento> eventos;
+
+class EventoCard extends JPanel {
+    private Evento evento;
     private Function<Evento, Void> onEventoChange;
 
-    public ListaDeEventos(ArrayList<Evento> eventos, Function<Evento, Void> onEventoChange) {
+    public EventoCard(Evento evento, Function<Evento, Void> onEventoChange) {
         super();
 
-        this.eventos = eventos;
+        this.evento = evento;
         this.onEventoChange = onEventoChange;
 
         this.draw();
     }
 
-    public void setEventos(ArrayList<Evento> eventos) {
-        this.eventos = eventos;
-    }
-
-    public void setOnEventoChange(Function<Evento, Void> onEventoChange) {
-        this.onEventoChange = onEventoChange;
-    }
-
     private void draw() {
-        this.removeAll();
-
         this.setLayout(new GridBagLayout());
-
         GridBagConstraints gc = new GridBagConstraints();
 
-        gc.fill = GridBagConstraints.BOTH;
+        gc.anchor = GridBagConstraints.LINE_START;
+
         gc.gridx = 0;
         gc.gridy = 0;
 
-        for (Evento evento : eventos) {
-            JButton button = new JButton(evento.getCodigo());
-            button.addActionListener(e -> {
-                onEventoChange.apply(evento);
-            });
-            this.add(button, gc);
-            gc.gridy++;
+        String tipoDeEvento = "";
+        if (evento instanceof Ciclone) {
+            tipoDeEvento = "Ciclone";
+        } else if (evento instanceof Terremoto) {
+            tipoDeEvento = "Terremoto";
+        } else if (evento instanceof Seca) {
+            tipoDeEvento = "Seca";
         }
 
-        this.revalidate();
-        this.repaint();
+        gc.gridwidth = 2;
+        this.add(new JLabel(tipoDeEvento), gc);
+
+        gc.gridwidth = 1;
+        gc.gridy++;
+        this.add(new JLabel("Código: "), gc);
+        gc.gridx++;
+        this.add(new JLabel(evento.getCodigo()), gc);
+
+        gc.gridx = 0;
+        gc.gridy++;
+        this.add(new JLabel("Data: "), gc);
+        gc.gridx++;
+        this.add(new JLabel(evento.getData()), gc);
+
+        gc.gridx = 0;
+        gc.gridy++;
+        this.add(new JLabel("Latitude: "), gc);
+        gc.gridx++;
+        this.add(new JLabel(String.valueOf(evento.getLatitude())), gc);
+
+        gc.gridx = 0;
+        gc.gridy++;
+        this.add(new JLabel("Longitude: "), gc);
+        gc.gridx++;
+        this.add(new JLabel(String.valueOf(evento.getLongitude())), gc);
+
+        switch (tipoDeEvento) {
+            case "Ciclone":
+                Ciclone ciclone = (Ciclone) evento;
+                gc.gridx = 0;
+                gc.gridy++;
+                this.add(new JLabel("Velocidade: "), gc);
+                gc.gridx++;
+                this.add(new JLabel(String.valueOf(ciclone.getVelocidade())), gc);
+
+                gc.gridx = 0;
+                gc.gridy++;
+                this.add(new JLabel("Precipitação: "), gc);
+                gc.gridx++;
+                this.add(new JLabel(String.valueOf(ciclone.getPrecipitacao())), gc);
+                break;
+
+            case "Terremoto":
+                Terremoto terremoto = (Terremoto) evento;
+                gc.gridx = 0;
+                gc.gridy++;
+                this.add(new JLabel("Magnitude: "), gc);
+                gc.gridx++;
+                this.add(new JLabel(String.valueOf(terremoto.getMagnitude())), gc);
+                break;
+
+            case "Seca":
+                Seca seca = (Seca) evento;
+                gc.gridx = 0;
+                gc.gridy++;
+                this.add(new JLabel("Estiagem: "), gc);
+                gc.gridx++;
+                this.add(new JLabel(String.valueOf(seca.getEstiagem())), gc);
+                break;
+        }
+
+        gc.gridx = 0;
+        gc.gridy++;
+        gc.gridwidth = 2;
+        JButton selecionar = new JButton("Selecionar");
+        selecionar.addActionListener(e -> {
+            this.onEventoChange.apply(evento);
+        });
+
+        this.add(selecionar, gc);
     }
 }
