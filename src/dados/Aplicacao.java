@@ -7,11 +7,13 @@ public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
     private ArrayList<Equipe> equipes;
     private ArrayList<Evento> eventos;
+    private ArrayList<Atendimento> atendimentos;
 
     public Aplicacao() {
         this.equipamentos = new ArrayList<>();
         this.equipes = new ArrayList<>();
         this.eventos = new ArrayList<>();
+        this.atendimentos = new ArrayList<>();
     }
 
     public boolean addEquipamento(Equipamento e) {
@@ -47,6 +49,22 @@ public class Aplicacao {
 
         this.eventos.add(e);
         this.eventos.sort(Comparator.comparing(Evento::getCodigo));
+        return true;
+    }
+
+    public ArrayList<Evento> getEventos() {
+        return this.eventos;
+    }
+
+    public boolean addAtendimento(Atendimento a) {
+        boolean idUsed = this.atendimentos.stream().anyMatch((atendimento) -> (atendimento.getCod() == a.getCod()));
+
+        if (idUsed) {
+            return false;
+        }
+
+        this.atendimentos.add(a);
+        this.atendimentos.sort(Comparator.comparing(Atendimento::getCod));
         return true;
     }
 

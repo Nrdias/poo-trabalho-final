@@ -59,7 +59,7 @@ public class Programa extends JFrame {
 
         JButton cadastrarAtendimento = new JButton("Cadastrar Atendimento");
         cadastrarAtendimento.addActionListener(e -> {
-            this.changePanel(new CadastroAtendimento());
+            this.changePanel(new CadastroAtendimento(app));
         });
         this.mainPanel.add(cadastrarAtendimento);
 
