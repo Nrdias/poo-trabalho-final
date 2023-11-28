@@ -1,12 +1,10 @@
 package dados;
 
 public class Equipamento {
-
     private int id;
-
     private String nome;
-
     private double custoDia;
+    private Equipe equipe;
 
     public Equipamento(int id, String nome, double custoDia) {
         this.id = id;
@@ -26,8 +24,22 @@ public class Equipamento {
         return custoDia;
     }
 
+    public Equipe getEquipe() {
+        return equipe;
+    }
+
+    public void setEquipe(Equipe equipe) {
+        this.equipe = equipe;
+    }
+
     @Override
     public String toString() {
-        return "Id: " + id + "\n" + "Nome: " + nome + "\n" + "Custo diário:" + custoDia + "\n";
+        String str = "Id: " + id + "\nNome: " + nome + "\nCusto diário:" + custoDia + "\n";
+
+        if (this.equipe != null) {
+            str += "Equipe: " + this.equipe.getCodinome() + "\n";
+        }
+
+        return str;
     }
 }
