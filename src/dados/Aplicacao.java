@@ -112,6 +112,10 @@ public class Aplicacao {
         return this.atendimentos.add(a);
     }
 
+    public ArrayList<Atendimento> getAtendimentos() {
+        return new ArrayList<>(atendimentos);
+    }
+
     public int getAtendimentosPendentesSize() {
         return this.atendimentosPendentes.size();
     }
