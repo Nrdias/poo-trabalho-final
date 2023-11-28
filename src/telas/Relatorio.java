@@ -9,7 +9,7 @@ public class Relatorio extends JPanel {
     Aplicacao app;
 
     JLabel equipamentosLabel, equipesLabel, eventosLabel, atendimentosLabel;
-    JTextArea equipamentos, equipes, eventos, atendimentos, messages;
+    JTextArea equipamentos, equipes, eventos, atendimentos;
 
     public Relatorio(Aplicacao app) {
         super();
@@ -18,6 +18,7 @@ public class Relatorio extends JPanel {
         this.setLayout(new GridLayout(5, 2));
 
         this.equipamentosLabel = new JLabel("Equipamentos");
+        this.equipamentosLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.equipamentos = new JTextArea(5, 30);
         this.equipamentos.setEditable(false);
 
@@ -33,25 +34,43 @@ public class Relatorio extends JPanel {
         this.atendimentos = new JTextArea(5, 30);
         this.atendimentos.setEditable(false);
 
-        this.add(equipamentosLabel);
-        this.add(equipamentos);
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        var gc = new GridBagConstraints();
 
-        this.add(equipesLabel);
-        this.add(equipes);
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.gridx = 0;
+        gc.gridy = 0;
+        gc.weighty = 0.1;
+        panel.add(equipamentosLabel, gc);
+        gc.gridy++;
+        gc.weighty = 0.9;
+        panel.add(new JScrollPane(equipamentos), gc);
 
-        this.add(eventosLabel);
-        this.add(eventos);
+        gc.gridy++;
+        gc.weighty = 0.1;
+        panel.add(equipesLabel, gc);
+        gc.gridy++;
+        gc.weighty = 0.9;
+        panel.add(new JScrollPane(equipes), gc);
 
-        this.add(atendimentosLabel);
-        this.add(atendimentos);
+        gc.gridy++;
+        gc.weighty = 0.1;
+        panel.add(eventosLabel, gc);
+        gc.gridy++;
+        gc.weighty = 0.9;
+        panel.add(new JScrollPane(eventos), gc);
 
+        gc.gridy++;
+        gc.weighty = 0.1;
+        panel.add(atendimentosLabel, gc);
+        gc.gridy++;
+        gc.weighty = 0.9;
+        panel.add(new JScrollPane(atendimentos), gc);
 
-        this.messages = new JTextArea(5, 30);
-        this.messages.setEditable(false);
-        this.messages.setLineWrap(true);
-        this.messages.setWrapStyleWord(true);
-        this.add(new JLabel("Mensagens"));
-        this.add(messages);
+        this.setLayout(new BorderLayout());
+
+        this.add(new JScrollPane(panel), BorderLayout.CENTER);
 
         handleRelatorio();
 
@@ -59,10 +78,6 @@ public class Relatorio extends JPanel {
     }
 
     public void handleRelatorio() {
-        if(app.getAtendimentos().isEmpty() && app.getEquipamentos().isEmpty() && app.getEquipes().isEmpty() && app.getEventos().isEmpty()) {
-            messages.setText("Não há dados para gerar relatório");
-            return;
-        }
         handleRelatorioEquipamentos();
         handleRelatorioEquipes();
         handleRelatorioEventos();
@@ -70,42 +85,34 @@ public class Relatorio extends JPanel {
     }
 
     public void handleRelatorioEquipamentos() {
-        if(app.getEquipamentos().isEmpty()) {
-            messages.setText("Não há dados para gerar relatório");
+        if (app.hasEquipamentos()) {
+            equipamentos.setText(app.equipamentosToString());
         } else {
-            for (int i = 0; i < app.getEquipamentos().size(); i++) {
-                equipamentos.append(app.getEquipamentos().get(i).toString());
-            }
+            equipamentos.setText("Não há equipamentos para gerar relatório");
         }
     }
 
     public void handleRelatorioEquipes() {
-        if(app.getEquipes().isEmpty()) {
-            messages.setText("Não há dados para gerar relatório");
+        if (app.hasEquipes()) {
+            equipes.setText(app.equipesToString());
         } else {
-            for (int i = 0; i < app.getEquipes().size(); i++) {
-                equipes.append(app.getEquipes().get(i).toString());
-            }
+            equipes.setText("Não há equipes para gerar relatório");
         }
     }
 
     public void handleRelatorioEventos() {
-        if(app.getEventos().isEmpty()) {
-            messages.setText("Não há dados para gerar relatório");
+        if (app.hasEventos()) {
+            eventos.setText(app.eventosToString());
         } else {
-            for (int i = 0; i < app.getEventos().size(); i++) {
-                eventos.append(app.getEventos().get(i).toString());
-            }
+            eventos.setText("Não há eventos para gerar relatório");
         }
     }
 
     public void handleRelatorioAtendimentos() {
-        if(app.getAtendimentos().isEmpty()) {
-            messages.setText("Não há dados para gerar relatório");
+        if (app.hasAtendimentos()) {
+            atendimentos.setText(app.atendimentosToString());
         } else {
-            for (int i = 0; i < app.getAtendimentos().size(); i++) {
-                atendimentos.append(app.getAtendimentos().get(i).toString());
-            }
+            atendimentos.setText("Não há atendimentos para gerar relatório");
         }
     }
 

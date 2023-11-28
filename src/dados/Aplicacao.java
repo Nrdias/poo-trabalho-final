@@ -9,6 +9,13 @@ public class Aplicacao {
     private ArrayList<Evento> eventos;
     private ArrayList<Atendimento> atendimentos;
 
+    public Aplicacao() {
+        this.equipamentos = new ArrayList<>();
+        this.equipes = new ArrayList<>();
+        this.eventos = new ArrayList<>();
+        this.atendimentos = new ArrayList<>();
+    }
+
     public ArrayList<Equipamento> getEquipamentos() {
         return equipamentos;
     }
@@ -25,11 +32,17 @@ public class Aplicacao {
         return atendimentos;
     }
 
-    public Aplicacao() {
-        this.equipamentos = new ArrayList<>();
-        this.equipes = new ArrayList<>();
-        this.eventos = new ArrayList<>();
-        this.atendimentos = new ArrayList<>();
+    public boolean hasEquipamentos() {
+        return !this.equipamentos.isEmpty();
+    }
+    public boolean hasEquipes() {
+        return !this.equipes.isEmpty();
+    }
+    public boolean hasEventos() {
+        return !this.eventos.isEmpty();
+    }
+    public boolean hasAtendimentos() {
+        return !this.atendimentos.isEmpty();
     }
 
     public boolean addEquipamento(Equipamento e) {
@@ -93,6 +106,16 @@ public class Aplicacao {
 
         this.eventos.forEach((evento) -> {
             str.append(evento.toString()).append("\n");
+        });
+
+        return str.toString();
+    }
+
+    public String atendimentosToString() {
+        StringBuilder str = new StringBuilder("Atendimentos: \n");
+
+        this.atendimentos.forEach((atendimento) -> {
+            str.append(atendimento.toString()).append("\n");
         });
 
         return str.toString();
