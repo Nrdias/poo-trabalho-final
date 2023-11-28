@@ -13,6 +13,7 @@ public class Atendimento {
         this.dataInicio = dataInicio;
         this.duracao = duracao;
         this.status = EstadoAtendimento.PENDENTE;
+        this.evento = evento;
     }
 
     public Atendimento(int cod, String dataInicio, int duracao, Evento evento, Equipe equipe) {

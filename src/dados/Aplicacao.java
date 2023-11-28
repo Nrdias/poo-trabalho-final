@@ -1,19 +1,18 @@
 package dados;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
     private ArrayList<Equipe> equipes;
     private ArrayList<Evento> eventos;
-    private ArrayList<Atendimento> atendimentos;
+    private Queue<Atendimento> atendimentos;
 
     public Aplicacao() {
         this.equipamentos = new ArrayList<>();
         this.equipes = new ArrayList<>();
         this.eventos = new ArrayList<>();
-        this.atendimentos = new ArrayList<>();
+        this.atendimentos = new ArrayDeque<>();
     }
 
     public boolean addEquipamento(Equipamento e) {
@@ -58,14 +57,13 @@ public class Aplicacao {
 
     public boolean addAtendimento(Atendimento a) {
         boolean idUsed = this.atendimentos.stream().anyMatch((atendimento) -> (atendimento.getCod() == a.getCod()));
+        boolean eventoAtendido = this.atendimentos.stream().anyMatch((atendimento) -> (atendimento.getEvento().getCodigo().equals(a.getEvento().getCodigo())));
 
-        if (idUsed) {
+        if (idUsed || eventoAtendido) {
             return false;
         }
 
-        this.atendimentos.add(a);
-        this.atendimentos.sort(Comparator.comparing(Atendimento::getCod));
-        return true;
+        return this.atendimentos.add(a);
     }
 
     public String equipamentosToString() {
@@ -93,6 +91,16 @@ public class Aplicacao {
 
         this.eventos.forEach((evento) -> {
             str.append(evento.toString()).append("\n");
+        });
+
+        return str.toString();
+    }
+
+    public String atendimentosToString() {
+        StringBuilder str = new StringBuilder("Atendimentos: \n");
+
+        this.atendimentos.forEach((atendimento) -> {
+            str.append(atendimento.toString()).append("\n");
         });
 
         return str.toString();
