@@ -1,55 +1,50 @@
 package dados;
 
+import java.util.ArrayList;
+
 public class Equipe {
+    private String codinome;
+    private int quantidade;
+    private double latitude;
+    private double longitude;
 
-	private String codinome;
+    private ArrayList<Equipamento> equipamentos;
 
-	private int quantidade;
+    public Equipe(String codinome, int quantidade, double latitude, double longitude) {
+        this.codinome = codinome;
+        this.quantidade = quantidade;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.equipamentos = new ArrayList<>();
+    }
 
-	private double latitude;
+    public String getCodinome() {
+        return codinome;
+    }
 
-	private double longitude;
+    public int getQuantidade() {
+        return quantidade;
+    }
 
-	private Equipamento equipamento;
+    public double getLatitude() {
+        return latitude;
+    }
 
-	public Equipe(String codinome, int quantidade, double latitude, double longitude) {
-		this.codinome = codinome;
-		this.quantidade = quantidade;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.equipamento = null;
-	}
+    public double getLongitude() {
+        return longitude;
+    }
 
-	public String getCodinome() {
-		return codinome;
-	}
+    public boolean addEquipamento(Equipamento equipamento) {
+        boolean idUsed = this.equipamentos.stream().anyMatch(e -> e.getId().equals(equipamento.getId()));
 
-	public int getQuantidade() {
-		return quantidade;
-	}
+        if (idUsed) {
+            return false;
+        }
 
-	public double getLatitude() {
-		return latitude;
-	}
+        return this.equipamentos.add(equipamento);
+    }
 
-	public double getLongitude() {
-		return longitude;
-	}
-
-	public Equipamento getEquipamento() {
-		return equipamento;
-	}
-
-	public void setEquipamento(Equipamento equipamento) {
-		this.equipamento = equipamento;
-	}
-
-	public String toString() {
-		if(equipamento != null) {
-			return "codinome=" + codinome + ", quantidade=" + quantidade + ", latitude=" + latitude + ", longitude="
-					+ longitude + ", equipamento=" + equipamento.getNome();
-		}
-		return "codinome=" + codinome + ", quantidade=" + quantidade + ", latitude=" + latitude + ", longitude="
-				+ longitude;
-	}
+    public String toString() {
+        return "Codinome:" + codinome + "\nQuantidade:" + quantidade + "\nLatitude:" + latitude + "\nLongitude:" + longitude + "\nNúmero de equipamentos:" + equipamentos.size() + "\n";
+    }
 }
