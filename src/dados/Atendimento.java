@@ -41,6 +41,10 @@ public class Atendimento {
         return status;
     }
 
+    public void setStatus(EstadoAtendimento status) {
+        this.status = status;
+    }
+
     public Evento getEvento() {
         return evento;
     }

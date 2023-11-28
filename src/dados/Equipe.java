@@ -1,16 +1,14 @@
 package dados;
 
+import utils.Coordinate;
+
 public class Equipe {
-
 	private String codinome;
-
 	private int quantidade;
-
 	private double latitude;
-
 	private double longitude;
-
 	private Equipamento equipamento;
+	private Atendimento atendimento;
 
 	public Equipe(String codinome, int quantidade, double latitude, double longitude) {
 		this.codinome = codinome;
@@ -42,6 +40,18 @@ public class Equipe {
 
 	public void setEquipamento(Equipamento equipamento) {
 		this.equipamento = equipamento;
+	}
+
+	public Atendimento getAtendimento() {
+		return atendimento;
+	}
+
+	public void setAtendimento(Atendimento atendimento) {
+		this.atendimento = atendimento;
+	}
+
+	public Coordinate getCoordinates() {
+		return new Coordinate(latitude, longitude);
 	}
 
 	public String toString() {
