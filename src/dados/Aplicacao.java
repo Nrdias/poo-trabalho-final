@@ -135,6 +135,16 @@ public class Aplicacao {
         return str.toString();
     }
 
+
+    public boolean vincularEquipamentoEquipe(Equipamento equipamento, Equipe equipe) {
+        if (equipamento.getEquipe() != null) {
+            return false;
+        }
+
+        equipamento.setEquipe(equipe);
+        return equipe.addEquipamento(equipamento);
+    }
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("Equipamentos: \n");

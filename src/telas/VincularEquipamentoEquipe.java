@@ -12,8 +12,13 @@ public class VincularEquipamentoEquipe extends JPanel {
     private JPanel equipamentoSelection;
     private JPanel equipeSelection;
 
+    private Equipamento selectedEquipamento;
+    private Equipe selectedEquipe;
+
     private JTextArea equipamentoPreview;
     private JTextArea equipePreview;
+
+    private JButton vincular;
 
     public VincularEquipamentoEquipe(Aplicacao app) {
         super();
@@ -29,7 +34,25 @@ public class VincularEquipamentoEquipe extends JPanel {
         mainPanel.setLayout(new GridLayout(1, 2));
         mainPanel.add(equipamentoSelection);
         mainPanel.add(equipeSelection);
-        this.add(mainPanel);
+        this.add(mainPanel, BorderLayout.CENTER);
+
+        this.vincular = new JButton("Vincular");
+        this.vincular.addActionListener(e -> {
+            if (this.selectedEquipamento == null || this.selectedEquipe == null) {
+                JOptionPane.showMessageDialog(this, "Selecione um equipamento e uma equipe");
+                return;
+            }
+
+            boolean vinculado = this.app.vincularEquipamentoEquipe(this.selectedEquipamento, this.selectedEquipe);
+            if (!vinculado) {
+                JOptionPane.showMessageDialog(this, "Equipamento já vinculado a equipe");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "Equipamento vinculado com sucesso");
+        });
+
+        this.add(vincular, BorderLayout.SOUTH);
     }
 
     private void initSelectionPanels() {
@@ -53,6 +76,7 @@ public class VincularEquipamentoEquipe extends JPanel {
                 return;
             }
             Equipamento equipamento = app.getEquipamentoById(Integer.parseInt(nome));
+            this.selectedEquipamento = equipamento;
             if (equipamento == null) return;
 
             this.equipamentoPreview.setText(equipamento.toString());
@@ -70,6 +94,7 @@ public class VincularEquipamentoEquipe extends JPanel {
             }
 
             Equipe equipe = app.getEquipeByCodinome(nome);
+            this.selectedEquipe = equipe;
             if (equipe == null) return;
 
             equipePreview.setText(equipe.toString());
