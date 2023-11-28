@@ -1,40 +1,82 @@
 package dados;
 
 public class Atendimento {
+    private int cod;
+    private String dataInicio;
+    private int duracao;
+    private EstadoAtendimento status;
+    private Evento evento;
+    private Equipe equipe;
 
-	private int cod;
+    public Atendimento(int cod, String dataInicio, int duracao, Evento evento) {
+        this.cod = cod;
+        this.dataInicio = dataInicio;
+        this.duracao = duracao;
+        this.status = EstadoAtendimento.PENDENTE;
+        this.evento = evento;
+    }
 
-	private String dataInicio;
+    public Atendimento(int cod, String dataInicio, int duracao, Evento evento, Equipe equipe) {
+        this.cod = cod;
+        this.dataInicio = dataInicio;
+        this.duracao = duracao;
+        this.status = EstadoAtendimento.EXECUTANDO;
+        this.evento = evento;
+        this.equipe = equipe;
+    }
 
-	private int duracao;
+    public int getCod() {
+        return cod;
+    }
 
-	private String status;
+    public String getDataInicio() {
+        return dataInicio;
+    }
 
-	public double calculaCusto() {
-		return 0;
-	}
+    public int getDuracao() {
+        return duracao;
+    }
 
-	public Atendimento(int cod, String dataInicio, int duracao, String status) {
-		this.cod = cod;
-		this.dataInicio = dataInicio;
-		this.duracao = duracao;
-		this.status = status;
-	}
+    public EstadoAtendimento getStatus() {
+        return status;
+    }
 
-	public int getCod() {
-		return cod;
-	}
+    public Evento getEvento() {
+        return evento;
+    }
 
-	public String getDataInicio() {
-		return dataInicio;
-	}
+    public Equipe getEquipe() {
+        return equipe;
+    }
 
-	public int getDuracao() {
-		return duracao;
-	}
+    public void setEquipe(Equipe equipe) {
+        this.equipe = equipe;
+        this.status = EstadoAtendimento.EXECUTANDO;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public double calculaCusto() {
+        return 0;
+    }
 
+
+    @Override
+    public String toString() {
+        String s = "Atendimento\n" + "Código: " + cod + "\nData de inicio:" + dataInicio + "\nDuração:" + duracao + " dias\nStatus:" + status + "\n";
+
+        if (this.evento instanceof Terremoto) {
+            s += "Evento: Terremoto, código: " + evento.getCodigo() + "\n";
+        } else if (this.evento instanceof Ciclone) {
+            s += "Evento: Ciclone, código: " + evento.getCodigo() + "\n";
+        } else {
+            s += "Evento: Seca, código: " + evento.getCodigo() + "\n";
+        }
+
+        if (this.equipe != null) {
+            s += "Equipe: " + equipe.getCodinome() + "\n";
+        } else {
+            s += "Equipe: Não atribuída\n";
+        }
+
+        return s;
+    }
 }

@@ -1,35 +1,18 @@
 package dados;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
     private ArrayList<Equipe> equipes;
     private ArrayList<Evento> eventos;
-    private ArrayList<Atendimento> atendimentos;
+    private Queue<Atendimento> atendimentos;
 
     public Aplicacao() {
         this.equipamentos = new ArrayList<>();
         this.equipes = new ArrayList<>();
         this.eventos = new ArrayList<>();
-        this.atendimentos = new ArrayList<>();
-    }
-
-    public ArrayList<Equipamento> getEquipamentos() {
-        return equipamentos;
-    }
-
-    public ArrayList<Equipe> getEquipes() {
-        return equipes;
-    }
-
-    public ArrayList<Evento> getEventos() {
-        return eventos;
-    }
-
-    public ArrayList<Atendimento> getAtendimentos() {
-        return atendimentos;
+        this.atendimentos = new ArrayDeque<>();
     }
 
     public boolean hasEquipamentos() {
@@ -79,6 +62,21 @@ public class Aplicacao {
         this.eventos.add(e);
         this.eventos.sort(Comparator.comparing(Evento::getCodigo));
         return true;
+    }
+
+    public ArrayList<Evento> getEventos() {
+        return this.eventos;
+    }
+
+    public boolean addAtendimento(Atendimento a) {
+        boolean idUsed = this.atendimentos.stream().anyMatch((atendimento) -> (atendimento.getCod() == a.getCod()));
+        boolean eventoAtendido = this.atendimentos.stream().anyMatch((atendimento) -> (atendimento.getEvento().getCodigo().equals(a.getEvento().getCodigo())));
+
+        if (idUsed || eventoAtendido) {
+            return false;
+        }
+
+        return this.atendimentos.add(a);
     }
 
     public String equipamentosToString() {
