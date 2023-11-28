@@ -7,11 +7,29 @@ public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
     private ArrayList<Equipe> equipes;
     private ArrayList<Evento> eventos;
+    private ArrayList<Atendimento> atendimentos;
+
+    public ArrayList<Equipamento> getEquipamentos() {
+        return equipamentos;
+    }
+
+    public ArrayList<Equipe> getEquipes() {
+        return equipes;
+    }
+
+    public ArrayList<Evento> getEventos() {
+        return eventos;
+    }
+
+    public ArrayList<Atendimento> getAtendimentos() {
+        return atendimentos;
+    }
 
     public Aplicacao() {
         this.equipamentos = new ArrayList<>();
         this.equipes = new ArrayList<>();
         this.eventos = new ArrayList<>();
+        this.atendimentos = new ArrayList<>();
     }
 
     public boolean addEquipamento(Equipamento e) {
