@@ -6,26 +6,35 @@ public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
     private ArrayList<Equipe> equipes;
     private ArrayList<Evento> eventos;
-    private Queue<Atendimento> atendimentos;
+    private ArrayList<Atendimento> atendimentos;
+    private Queue<Atendimento> atendimentosPendentes;
 
     public Aplicacao() {
         this.equipamentos = new ArrayList<>();
         this.equipes = new ArrayList<>();
         this.eventos = new ArrayList<>();
-        this.atendimentos = new ArrayDeque<>();
+        this.atendimentos = new ArrayList<>();
+        this.atendimentosPendentes = new ArrayDeque<>();
     }
 
     public boolean hasEquipamentos() {
         return !this.equipamentos.isEmpty();
     }
+
     public boolean hasEquipes() {
         return !this.equipes.isEmpty();
     }
+
     public boolean hasEventos() {
         return !this.eventos.isEmpty();
     }
+
     public boolean hasAtendimentos() {
         return !this.atendimentos.isEmpty();
+    }
+
+    public boolean hasAtendimentosPendentes() {
+        return !this.atendimentosPendentes.isEmpty();
     }
 
     public boolean addEquipamento(Equipamento e) {
@@ -76,8 +85,21 @@ public class Aplicacao {
             return false;
         }
 
+        if (a.getStatus() == EstadoAtendimento.PENDENTE) {
+            this.atendimentosPendentes.add(a);
+        }
+
         return this.atendimentos.add(a);
     }
+
+    public int getAtendimentosPendentesSize() {
+        return this.atendimentosPendentes.size();
+    }
+
+    public Atendimento peekAtendimento() {
+        return this.atendimentosPendentes.peek();
+    }
+
 
     public String equipamentosToString() {
         StringBuilder str = new StringBuilder("Equipamentos: \n");
