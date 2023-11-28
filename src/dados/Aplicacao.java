@@ -53,6 +53,14 @@ public class Aplicacao {
         return true;
     }
 
+    public ArrayList<Equipamento> getEquipamentos() {
+        return this.equipamentos;
+    }
+
+    public Equipamento getEquipamentoById(int id) {
+        return this.equipamentos.stream().filter((equipamento) -> (equipamento.getId() == id)).findFirst().orElse(null);
+    }
+
     public boolean addEquipe(Equipe e) {
         boolean codinomeUsed = this.equipes.stream().anyMatch((equipe) -> (equipe.getCodinome().equals(e.getCodinome())));
 
@@ -63,6 +71,14 @@ public class Aplicacao {
         this.equipes.add(e);
         this.equipes.sort(Comparator.comparing(Equipe::getCodinome));
         return true;
+    }
+
+    public ArrayList<Equipe> getEquipes() {
+        return this.equipes;
+    }
+
+    public Equipe getEquipeByCodinome(String codinome) {
+        return this.equipes.stream().filter((equipe) -> (equipe.getCodinome().equals(codinome))).findFirst().orElse(null);
     }
 
     public boolean addEvento(Evento e) {
@@ -188,6 +204,16 @@ public class Aplicacao {
         });
 
         return str.toString();
+    }
+
+
+    public boolean vincularEquipamentoEquipe(Equipamento equipamento, Equipe equipe) {
+        if (equipamento.getEquipe() != null) {
+            return false;
+        }
+
+        equipamento.setEquipe(equipe);
+        return equipe.addEquipamento(equipamento);
     }
 
     @Override

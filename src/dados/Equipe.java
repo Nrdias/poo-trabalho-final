@@ -2,20 +2,22 @@ package dados;
 
 import utils.Coordinate;
 
+import java.util.ArrayList;
+
 public class Equipe {
 	private String codinome;
 	private int quantidade;
 	private double latitude;
 	private double longitude;
-	private Equipamento equipamento;
 	private Atendimento atendimento;
+	private ArrayList<Equipamento> equipamentos;
 
 	public Equipe(String codinome, int quantidade, double latitude, double longitude) {
 		this.codinome = codinome;
 		this.quantidade = quantidade;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.equipamento = null;
+		this.equipamentos = new ArrayList<>();
 	}
 
 	public String getCodinome() {
@@ -34,12 +36,14 @@ public class Equipe {
 		return longitude;
 	}
 
-	public Equipamento getEquipamento() {
-		return equipamento;
-	}
+	public boolean addEquipamento(Equipamento equipamento) {
+		boolean idUsed = this.equipamentos.stream().anyMatch(e -> e.getId().equals(equipamento.getId()));
 
-	public void setEquipamento(Equipamento equipamento) {
-		this.equipamento = equipamento;
+		if (idUsed) {
+			return false;
+		}
+
+		return this.equipamentos.add(equipamento);
 	}
 
 	public Atendimento getAtendimento() {
@@ -55,11 +59,6 @@ public class Equipe {
 	}
 
 	public String toString() {
-		if(equipamento != null) {
-			return "codinome=" + codinome + ", quantidade=" + quantidade + ", latitude=" + latitude + ", longitude="
-					+ longitude + ", equipamento=" + equipamento.getNome();
-		}
-		return "codinome=" + codinome + ", quantidade=" + quantidade + ", latitude=" + latitude + ", longitude="
-				+ longitude;
+		return "Codinome:" + codinome + "\nQuantidade:" + quantidade + "\nLatitude:" + latitude + "\nLongitude:" + longitude + "\nNúmero de equipamentos:" + equipamentos.size() + "\n";
 	}
 }

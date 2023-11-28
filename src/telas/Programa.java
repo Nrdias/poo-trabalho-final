@@ -4,8 +4,6 @@ import dados.Aplicacao;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class Programa extends JFrame {
     JPanel mainPanel;
@@ -23,7 +21,7 @@ public class Programa extends JFrame {
         this.setVisible(true);
         this.setSize(500, 500);
 
-//        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 //        this.pack();
     }
 
@@ -33,7 +31,7 @@ public class Programa extends JFrame {
      */
     private void initMainPanel() {
         this.mainPanel = new JPanel();
-        this.mainPanel.setLayout(new GridLayout(8, 1));
+        this.mainPanel.setLayout(new GridLayout(9, 1));
 
         JLabel title = new JLabel("ACME Resgate :)");
         title.setFont(title.getFont().deriveFont(24.0F));
@@ -74,6 +72,13 @@ public class Programa extends JFrame {
             this.changePanel(new AlocarAtendimentos(app));
         });
         this.mainPanel.add(alocarAtendimentos);
+
+        JButton vincularEquipamentoEquipe = new JButton("Vincular um equipamento a uma equipe");
+        vincularEquipamentoEquipe.addActionListener(e -> {
+            this.changePanel(new VincularEquipamentoEquipe(app));
+        });
+        this.mainPanel.add(vincularEquipamentoEquipe);
+
 
         JButton sair = new JButton("Sair");
         sair.addActionListener(e -> {
