@@ -15,6 +15,19 @@ public class Aplicacao {
         this.atendimentos = new ArrayDeque<>();
     }
 
+    public boolean hasEquipamentos() {
+        return !this.equipamentos.isEmpty();
+    }
+    public boolean hasEquipes() {
+        return !this.equipes.isEmpty();
+    }
+    public boolean hasEventos() {
+        return !this.eventos.isEmpty();
+    }
+    public boolean hasAtendimentos() {
+        return !this.atendimentos.isEmpty();
+    }
+
     public boolean addEquipamento(Equipamento e) {
         boolean idUsed = this.equipamentos.stream().anyMatch((equipamento) -> (equipamento.getId() == e.getId()));
 

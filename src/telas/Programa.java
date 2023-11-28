@@ -65,7 +65,7 @@ public class Programa extends JFrame {
 
         JButton mostrarRelatorio = new JButton("Mostrar Relatório");
         mostrarRelatorio.addActionListener(e -> {
-            this.changePanel(new Relatorio());
+            this.changePanel(new Relatorio(app));
         });
         this.mainPanel.add(mostrarRelatorio);
 
