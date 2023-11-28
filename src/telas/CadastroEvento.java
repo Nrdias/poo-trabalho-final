@@ -233,6 +233,11 @@ public class CadastroEvento extends JPanel {
         } else {
             try {
                 parsedLatitude = Double.parseDouble(latitude);
+
+                if (parsedLatitude < -90 || parsedLatitude > 90) {
+                    this.messages.append("Latitude inválida. Deve estar entre -90 e 90. \n");
+                    hasErrors = true;
+                }
             } catch (NumberFormatException e) {
                 this.messages.append("Latitude inválida. Deve ser do tipo Double. \n");
                 hasErrors = true;
@@ -245,6 +250,11 @@ public class CadastroEvento extends JPanel {
         } else {
             try {
                 parsedLongitude = Double.parseDouble(longitude);
+
+                if (parsedLongitude < -180 || parsedLongitude > 180) {
+                    this.messages.append("Longitude inválida. Deve estar entre -180 e 180. \n");
+                    hasErrors = true;
+                }
             } catch (NumberFormatException e) {
                 this.messages.append("Longitude inválida. Deve ser do tipo Double. \n");
                 hasErrors = true;
