@@ -57,4 +57,26 @@ public class Atendimento {
     public double calculaCusto() {
         return 0;
     }
+
+
+    @Override
+    public String toString() {
+        String s = "Atendimento\n" + "Código: " + cod + "\nData de inicio:" + dataInicio + "\nDuração:" + duracao + " dias\nStatus:" + status + "\n";
+
+        if (this.evento instanceof Terremoto) {
+            s += "Evento: Terremoto, código: " + evento.getCodigo() + "\n";
+        } else if (this.evento instanceof Ciclone) {
+            s += "Evento: Ciclone, código: " + evento.getCodigo() + "\n";
+        } else {
+            s += "Evento: Seca, código: " + evento.getCodigo() + "\n";
+        }
+
+        if (this.equipe != null) {
+            s += "Equipe: " + equipe.getCodinome() + "\n";
+        } else {
+            s += "Equipe: Não atribuída\n";
+        }
+
+        return s;
+    }
 }
