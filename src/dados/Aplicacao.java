@@ -2,6 +2,11 @@ package dados;
 
 import utils.Coordinate;
 
+import java.io.BufferedReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -214,6 +219,22 @@ public class Aplicacao {
 
         equipamento.setEquipe(equipe);
         return equipe.addEquipamento(equipamento);
+    }
+
+    public void lerArquivoEquipes(String arquivo){
+        BufferedReader br;
+        Path path = Paths.get(arquivo);
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            String line = br.readLine();
+            while ((line = br.readLine()) != null){
+                String[] data = line.split(";");
+                this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]))) ;
+            }
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
+        }
     }
 
     @Override
