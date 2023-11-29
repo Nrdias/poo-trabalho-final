@@ -21,6 +21,7 @@ public class Programa extends JFrame {
         this.setVisible(true);
         this.setSize(500, 500);
 
+
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 //        this.pack();
     }
@@ -33,9 +34,27 @@ public class Programa extends JFrame {
         this.mainPanel = new JPanel();
         this.mainPanel.setLayout(new GridLayout(9, 1));
 
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         JLabel title = new JLabel("ACME Resgate :)");
         title.setFont(title.getFont().deriveFont(24.0F));
-        this.mainPanel.add(title);
+        topPanel.add(title);
+
+        JButton carregarDados = new JButton("Carregar Dados");
+        JButton salvarDados = new JButton("Salvar Dados");
+
+        carregarDados.addActionListener(e -> {
+            this.handleCarregarDados();
+        });
+        salvarDados.addActionListener(e -> {
+            this.handleSalvarDados();
+        });
+
+        topPanel.add(carregarDados);
+        topPanel.add(salvarDados);
+
+        this.mainPanel.add(topPanel);
 
         JButton cadastrarEvento = new JButton("Cadastrar Evento");
         cadastrarEvento.addActionListener(e -> {
@@ -83,15 +102,55 @@ public class Programa extends JFrame {
         JButton sair = new JButton("Sair");
         sair.addActionListener(e -> {
             // TODO: mensagem de confirmação?
-            int confirmed = JOptionPane.showConfirmDialog(null,
-                    "Você realmente quer sair?", ":(",
-                    JOptionPane.YES_NO_OPTION);
+            int confirmed = JOptionPane.showConfirmDialog(null, "Você realmente quer sair?", ":(", JOptionPane.YES_NO_OPTION);
 
             if (confirmed == JOptionPane.YES_OPTION) {
                 System.exit(0);
             }
         });
         this.mainPanel.add(sair);
+    }
+
+    /**
+     * Lida com o evento de carregar os dados
+     */
+    private void handleCarregarDados() {
+        String[] options = {"Eventos", "Equipes", "Equipamentos", "Atendimentos"};
+        int selected = JOptionPane.showOptionDialog(this, "Selecione qual entidade deseja ler", "Ler Dados", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, "Equipes");
+
+        if (selected == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        String path = fileChooser.getSelectedFile().getAbsolutePath();
+
+        switch (selected) {
+            case 0:
+                app.lerArquivoEventos(path);
+                break;
+            case 1:
+                app.lerArquivoEquipes(path);
+                break;
+            case 2:
+                app.lerArquivosEquipamentos(path);
+                break;
+            case 3:
+                app.lerArquivoAtendimentos(path);
+                break;
+        }
+    }
+
+    /**
+     * Lida com o evento de salvar os dados
+     */
+    private void handleSalvarDados() {
     }
 
 
