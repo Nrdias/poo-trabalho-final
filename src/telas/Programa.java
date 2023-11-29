@@ -4,6 +4,7 @@ import dados.Aplicacao;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class Programa extends JFrame {
     JPanel mainPanel;
@@ -146,7 +147,7 @@ public class Programa extends JFrame {
             case 0 -> app.lerArquivoEventos(path);
             case 1 -> app.lerArquivoEquipes(path);
             case 2 -> app.lerArquivosEquipamentos(path);
-            case 3 ->  app.lerArquivoAtendimentos(path);
+            case 3 -> app.lerArquivoAtendimentos(path);
             default -> false;
         };
 
@@ -175,20 +176,31 @@ public class Programa extends JFrame {
             return;
         }
 
-        String arquivo = fileChooser.getSelectedFile().getName();
+        String arquivo = fileChooser.getSelectedFile().getAbsolutePath();
+
+        if (selected == 4) {
+            // remove the file name
+            arquivo = arquivo.substring(0, arquivo.lastIndexOf(File.separator) + 1);
+        }
+
         System.out.println(arquivo);
 
-        switch (selected) {
+        boolean gravou = switch (selected) {
             case 0 -> app.gravarArquivoEventos(arquivo);
             case 1 -> app.gravarArquivoEquipes(arquivo);
             case 2 -> app.gravarArquivoEquipamentos(arquivo);
             case 3 -> app.gravarArquivoAtendimentos(arquivo);
-            default -> {
-                app.gravarArquivoEventos("eventos");
-                app.gravarArquivoEquipes("equipes");
-                app.gravarArquivoEquipamentos("equipamentos");
-                app.gravarArquivoAtendimentos("atendimentos");
-            }
+            case 4 -> app.gravarArquivoEventos(arquivo + "eventos") &&
+                    app.gravarArquivoEquipes(arquivo + "equipes") &&
+                    app.gravarArquivoEquipamentos(arquivo + "equipamentos") &&
+                    app.gravarArquivoAtendimentos(arquivo + "atendimentos");
+            default -> false;
+        };
+
+        if (gravou) {
+            JOptionPane.showMessageDialog(null, "Dados salvos com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Não foi possível salvar os dados");
         }
     }
 

@@ -2,7 +2,6 @@ package dados;
 
 import utils.Coordinate;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -227,7 +226,7 @@ public class Aplicacao {
 
     public boolean carregarDadosIniciais() {
         final Path EQUIPES_PATH = Paths.get("src", "files", "EXEMPLO-EQUIPES.CSV").toAbsolutePath();
-        final Path EQUIPAMENTOS_PATH = Paths.get("src",  "files", "EXEMPLO-EQUIPAMENTOS.CSV").toAbsolutePath();
+        final Path EQUIPAMENTOS_PATH = Paths.get("src", "files", "EXEMPLO-EQUIPAMENTOS.CSV").toAbsolutePath();
         final Path EVENTOS_PATH = Paths.get("src", "files", "EXEMPLO-EVENTOS.CSV").toAbsolutePath();
         final Path ATENDIMENTOS_PATH = Paths.get("src", "files", "EXEMPLO-ATENDIMENTOS.CSV").toAbsolutePath();
 
@@ -350,8 +349,11 @@ public class Aplicacao {
         return true;
     }
 
-    public void gravarArquivoEquipes(String arquivo) {
-        String path = "src/files/" + arquivo + ".csv";
+    public boolean gravarArquivoEquipes(String arquivo) {
+        String path = arquivo;
+        if (!arquivo.endsWith(".csv")) {
+            path = arquivo + ".csv";
+        }
         try {
             FileOutputStream fos = new FileOutputStream(path);
             PrintStream writer = new PrintStream(fos);
@@ -360,14 +362,20 @@ public class Aplicacao {
                 writer.println(equipe.getCodinome() + ";" + equipe.getQuantidade() + ";" + equipe.getLatitude() + ";" + equipe.getLongitude());
             });
             writer.close();
-            JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro ao gravar o arquivo");
+            return false;
         }
+        return true;
     }
 
-    public void gravarArquivoEventos(String arquivo) {
-        String path = "src/files/" + arquivo + ".csv";
+    public boolean gravarArquivoEventos(String arquivo) {
+        String path = arquivo;
+        if (!arquivo.endsWith(".csv")) {
+            path = arquivo + ".csv";
+        }
+
+        System.out.println("Gravando evento no caminho: " + path);
         try {
             FileOutputStream fos = new FileOutputStream(path);
             PrintStream writer = new PrintStream(fos);
@@ -382,14 +390,18 @@ public class Aplicacao {
                 }
             });
             writer.close();
-            JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro ao gravar o arquivo");
+            return false;
         }
+        return true;
     }
 
-    public void gravarArquivoAtendimentos(String arquivo) {
-        String path = "src/files/" + arquivo + ".csv";
+    public boolean gravarArquivoAtendimentos(String arquivo) {
+        String path = arquivo;
+        if (!arquivo.endsWith(".csv")) {
+            path = arquivo + ".csv";
+        }
         try {
             FileOutputStream fos = new FileOutputStream(path);
             PrintStream writer = new PrintStream(fos);
@@ -398,14 +410,18 @@ public class Aplicacao {
                 writer.println(atendimento.getCod() + ";" + atendimento.getDataInicio() + ";" + atendimento.getDuracao() + ";" + atendimento.getStatus() + ";" + atendimento.getEvento().getCodigo());
             });
             writer.close();
-            JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro ao gravar o arquivo");
+            return false;
         }
+        return true;
     }
 
-    public void gravarArquivoEquipamentos(String arquivo) {
-        String path = "src/files/" + arquivo + ".csv";
+    public boolean gravarArquivoEquipamentos(String arquivo) {
+        String path = arquivo;
+        if (!arquivo.endsWith(".csv")) {
+            path = arquivo + ".csv";
+        }
         try {
             FileOutputStream fos = new FileOutputStream(path);
             PrintStream writer = new PrintStream(fos);
@@ -420,10 +436,11 @@ public class Aplicacao {
                 }
             });
             writer.close();
-            JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro ao gravar o arquivo");
+            return false;
         }
+        return true;
     }
 
 
