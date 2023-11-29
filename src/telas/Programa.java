@@ -33,7 +33,7 @@ public class Programa extends JFrame {
      */
     private void initMainPanel() {
         this.mainPanel = new JPanel();
-        this.mainPanel.setLayout(new GridLayout(10, 1));
+        this.mainPanel.setLayout(new GridLayout(11, 1));
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -103,6 +103,12 @@ public class Programa extends JFrame {
             this.changePanel(new AlocarAtendimentos(app));
         });
         this.mainPanel.add(alocarAtendimentos);
+
+        JButton alterarAtendimentos = new JButton("Alterar Atendimento");
+        alterarAtendimentos.addActionListener(e -> {
+            this.changePanel(new AlterarAtendimento(app));
+        });
+        this.mainPanel.add(alterarAtendimentos);
 
         JButton vincularEquipamentoEquipe = new JButton("Vincular um equipamento a uma equipe");
         vincularEquipamentoEquipe.addActionListener(e -> {

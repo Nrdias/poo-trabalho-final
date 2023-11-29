@@ -122,6 +122,10 @@ public class Aplicacao {
         return new ArrayList<>(atendimentos);
     }
 
+    public Atendimento getAtendimentoById(int id) {
+        return this.atendimentos.stream().filter((atendimento) -> (atendimento.getCod() == id)).findFirst().orElse(null);
+    }
+
     public int getAtendimentosPendentesSize() {
         return this.atendimentosPendentes.size();
     }
