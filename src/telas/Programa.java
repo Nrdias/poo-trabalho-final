@@ -142,19 +142,18 @@ public class Programa extends JFrame {
 
         String path = fileChooser.getSelectedFile().getAbsolutePath();
 
-        switch (selected) {
-            case 0:
-                app.lerArquivoEventos(path);
-                break;
-            case 1:
-                app.lerArquivoEquipes(path);
-                break;
-            case 2:
-                app.lerArquivosEquipamentos(path);
-                break;
-            case 3:
-                app.lerArquivoAtendimentos(path);
-                break;
+        boolean carregou = switch (selected) {
+            case 0 -> app.lerArquivoEventos(path);
+            case 1 -> app.lerArquivoEquipes(path);
+            case 2 -> app.lerArquivosEquipamentos(path);
+            case 3 ->  app.lerArquivoAtendimentos(path);
+            default -> false;
+        };
+
+        if (carregou) {
+            JOptionPane.showMessageDialog(null, "Dados carregados com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Não foi possível carregar os dados");
         }
     }
 
