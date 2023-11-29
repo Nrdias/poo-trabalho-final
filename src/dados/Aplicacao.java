@@ -2,7 +2,6 @@ package dados;
 
 import utils.Coordinate;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -10,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
@@ -25,7 +23,6 @@ public class Aplicacao {
         this.eventos = new ArrayList<>();
         this.atendimentos = new ArrayList<>();
         this.atendimentosPendentes = new ArrayDeque<>();
-        dadosIniciais();
     }
 
     public boolean hasEquipamentos() {
@@ -226,33 +223,13 @@ public class Aplicacao {
         return equipe.addEquipamento(equipamento);
     }
 
-    public void dadosIniciais() {
-        JOptionPane dialog = new JOptionPane();
-        int opcao = JOptionPane.showConfirmDialog(null, "Deseja carregar os dados iniciais?", "Dados iniciais", JOptionPane.YES_NO_OPTION);
-        if (opcao != JOptionPane.YES_OPTION) return;
-
-        String equipes = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipes");
-        String eventos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de eventos");
-        String atendimentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de atendimentos");
-        String equipamentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipamentos");
-        this.lerArquivoEquipes(equipes);
-        JOptionPane.showMessageDialog(null, "Equipes carregadas com sucesso");
-        this.lerArquivoEventos(eventos);
-        JOptionPane.showMessageDialog(null, "Eventos carregados com sucesso");
-        this.lerArquivoAtendimentos(atendimentos);
-        JOptionPane.showMessageDialog(null, "Atendimentos carregados com sucesso");
-        this.lerArquivosEquipamentos(equipamentos);
-        JOptionPane.showMessageDialog(null, "Equipamentos carregados com sucesso");
-
-        JOptionPane.showMessageDialog(null, "Dados carregados com sucesso");
-    }
-
     public void lerArquivoEquipes(String arquivo){
         BufferedReader br;
         Path path = Paths.get(arquivo);
         try{
             br = Files.newBufferedReader(path, Charset.defaultCharset());
-            String line = br.readLine();
+            br.readLine();
+            String line;
             while ((line = br.readLine()) != null){
                 String[] data = line.split(";");
                 this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]))) ;
@@ -268,7 +245,8 @@ public class Aplicacao {
         Path path = Paths.get(arquivo);
         try{
             br = Files.newBufferedReader(path, Charset.defaultCharset());
-            String line = br.readLine();
+            br.readLine();
+            String line;
             while ((line = br.readLine()) != null){
                 String[] data = line.split(";");
                 switch (Integer.parseInt(data[4])) {
@@ -291,7 +269,8 @@ public class Aplicacao {
         Path path = Paths.get(arquivo);
         try{
             br = Files.newBufferedReader(path, Charset.defaultCharset());
-            String line = br.readLine();
+            br.readLine();
+            String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 Evento evento = this.getEventos().stream().filter((e) -> (e.getCodigo().equals(data[4]))).findFirst().orElse(null);
@@ -309,7 +288,8 @@ public class Aplicacao {
         Path path = Paths.get(arquivo);
         try{
             br = Files.newBufferedReader(path, Charset.defaultCharset());
-            String line = br.readLine();
+            br.readLine();
+            String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 Equipe e;
