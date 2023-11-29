@@ -2,9 +2,13 @@ package dados;
 
 import utils.Coordinate;
 
+import java.io.BufferedReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Aplicacao {
     private ArrayList<Equipamento> equipamentos;
@@ -210,7 +214,6 @@ public class Aplicacao {
         return str.toString();
     }
 
-
     public boolean vincularEquipamentoEquipe(Equipamento equipamento, Equipe equipe) {
         if (equipamento.getEquipe() != null) {
             return false;
@@ -218,6 +221,103 @@ public class Aplicacao {
 
         equipamento.setEquipe(equipe);
         return equipe.addEquipamento(equipamento);
+    }
+
+    public void lerArquivoEquipes(String arquivo){
+        BufferedReader br;
+        Path path = Paths.get(arquivo);
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null){
+                String[] data = line.split(";");
+                this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]))) ;
+            }
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
+        }
+    }
+
+    public void lerArquivoEventos(String arquivo){
+        BufferedReader br;
+        Path path = Paths.get(arquivo);
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null){
+                String[] data = line.split(";");
+                switch (Integer.parseInt(data[4])) {
+                    case 1 ->
+                            this.addEvento(new Ciclone(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[5]), Double.parseDouble(data[6])));
+                    case 2 ->
+                            this.addEvento(new Terremoto(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[5])));
+                    case 3 ->
+                            this.addEvento(new Seca(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]), Integer.parseInt(data[5])));
+                }
+            }
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
+        }
+    }
+
+    public void lerArquivoAtendimentos(String arquivo){
+        BufferedReader br;
+        Path path = Paths.get(arquivo);
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                Evento evento = this.getEventos().stream().filter((e) -> (e.getCodigo().equals(data[4]))).findFirst().orElse(null);
+                if(evento == null) System.out.println("Evento não encontrado");
+                else this.addAtendimento(new Atendimento(Integer.parseInt(data[0]), evento.getData(), Integer.parseInt(data[2]), evento));
+            }
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
+        }
+    }
+
+    public void lerArquivosEquipamentos(String arquivo){
+        BufferedReader br;
+        Path path = Paths.get(arquivo);
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                Equipe e;
+                switch (Integer.parseInt(data[4])) {
+                    case 1 -> {
+                        this.addEquipamento(new Barco(Integer.parseInt(data[0]), data[1], Double.parseDouble(data[2]), Integer.parseInt(data[5])));
+                        e = this.getEquipes().stream().filter((equipe) -> (equipe.getCodinome().equals(data[3]))).findFirst().orElse(null);
+                        if (e == null) System.out.println("Equipe não encontrada");
+                        else this.vincularEquipamentoEquipe(this.getEquipamentoById(Integer.parseInt(data[0])), e);
+                    }
+                    case 2 -> {
+                        this.addEquipamento(new CaminhaoTanque(Integer.parseInt(data[0]), data[1], Double.parseDouble(data[2]), Double.parseDouble(data[5])));
+                        e = this.getEquipes().stream().filter((equipe) -> (equipe.getCodinome().equals(data[3]))).findFirst().orElse(null);
+                        if (e == null) System.out.println("Equipe não encontrada");
+                        else this.vincularEquipamentoEquipe(this.getEquipamentoById(Integer.parseInt(data[0])), e);
+                    }
+                    case 3 -> {
+                        this.addEquipamento(new Escavadeira(Integer.parseInt(data[0]), data[1], Double.parseDouble(data[2]), data[5], Double.parseDouble(data[6])));
+                        e = this.getEquipes().stream().filter((equipe) -> (equipe.getCodinome().equals(data[3]))).findFirst().orElse(null);
+                        if (e == null) System.out.println("Equipe não encontrada");
+                        else this.vincularEquipamentoEquipe(this.getEquipamentoById(Integer.parseInt(data[0])), e);
+                    }
+                }
+            }
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
+        }
     }
 
     @Override
