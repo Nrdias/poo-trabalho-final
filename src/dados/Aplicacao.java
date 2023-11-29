@@ -2,6 +2,7 @@ package dados;
 
 import utils.Coordinate;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -24,6 +25,7 @@ public class Aplicacao {
         this.eventos = new ArrayList<>();
         this.atendimentos = new ArrayList<>();
         this.atendimentosPendentes = new ArrayDeque<>();
+        dadosIniciais();
     }
 
     public boolean hasEquipamentos() {
@@ -211,7 +213,6 @@ public class Aplicacao {
         return str.toString();
     }
 
-
     public boolean vincularEquipamentoEquipe(Equipamento equipamento, Equipe equipe) {
         if (equipamento.getEquipe() != null) {
             return false;
@@ -219,6 +220,27 @@ public class Aplicacao {
 
         equipamento.setEquipe(equipe);
         return equipe.addEquipamento(equipamento);
+    }
+
+    public void dadosIniciais() {
+        JOptionPane dialog = new JOptionPane();
+        int opcao = JOptionPane.showConfirmDialog(null, "Deseja carregar os dados iniciais?", "Dados iniciais", JOptionPane.YES_NO_OPTION);
+        if (opcao != JOptionPane.YES_OPTION) return;
+
+        String equipes = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipes");
+        String eventos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de eventos");
+        String atendimentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de atendimentos");
+        String equipamentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipamentos");
+        this.lerArquivoEquipes(equipes);
+        JOptionPane.showMessageDialog(null, "Equipes carregadas com sucesso");
+        this.lerArquivoEventos(eventos);
+        JOptionPane.showMessageDialog(null, "Eventos carregados com sucesso");
+        this.lerArquivoAtendimentos(atendimentos);
+        JOptionPane.showMessageDialog(null, "Atendimentos carregados com sucesso");
+        this.lerArquivosEquipamentos(equipamentos);
+        JOptionPane.showMessageDialog(null, "Equipamentos carregados com sucesso");
+
+        JOptionPane.showMessageDialog(null, "Dados carregados com sucesso");
     }
 
     public void lerArquivoEquipes(String arquivo){
@@ -232,7 +254,7 @@ public class Aplicacao {
                 this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]))) ;
             }
         }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número Equipes");
             else System.out.println("Erro ao ler o arquivo");
         }
     }
@@ -255,7 +277,7 @@ public class Aplicacao {
                 }
             }
         }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número Eventos");
             else System.out.println("Erro ao ler o arquivo");
         }
     }
@@ -273,10 +295,11 @@ public class Aplicacao {
                 else this.addAtendimento(new Atendimento(Integer.parseInt(data[0]), evento.getData(), Integer.parseInt(data[2]), evento));
             }
         }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número Atendimentos");
             else System.out.println("Erro ao ler o arquivo");
         }
     }
+
     public void lerArquivosEquipamentos(String arquivo){
         BufferedReader br;
         Path path = Paths.get(arquivo);
@@ -294,7 +317,7 @@ public class Aplicacao {
                         else this.vincularEquipamentoEquipe(this.getEquipamentoById(Integer.parseInt(data[0])), e);
                     }
                     case 2 -> {
-                        this.addEquipamento(new CaminhaoTanque(Integer.parseInt(data[0]), data[1], Double.parseDouble(data[2]), Integer.parseInt(data[5])));
+                        this.addEquipamento(new CaminhaoTanque(Integer.parseInt(data[0]), data[1], Double.parseDouble(data[2]), Double.parseDouble(data[5])));
                         e = this.getEquipes().stream().filter((equipe) -> (equipe.getCodinome().equals(data[3]))).findFirst().orElse(null);
                         if (e == null) System.out.println("Equipe não encontrada");
                         else this.vincularEquipamentoEquipe(this.getEquipamentoById(Integer.parseInt(data[0])), e);
