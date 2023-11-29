@@ -2,8 +2,8 @@ package dados;
 
 import utils.Coordinate;
 
+import javax.swing.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +25,7 @@ public class Aplicacao {
         this.eventos = new ArrayList<>();
         this.atendimentos = new ArrayList<>();
         this.atendimentosPendentes = new ArrayDeque<>();
+        dadosIniciais();
     }
 
     public boolean hasEquipamentos() {
@@ -118,6 +119,10 @@ public class Aplicacao {
         return this.atendimentos.add(a);
     }
 
+    public ArrayList<Atendimento> getAtendimentos() {
+        return new ArrayList<>(atendimentos);
+    }
+
     public int getAtendimentosPendentesSize() {
         return this.atendimentosPendentes.size();
     }
@@ -134,7 +139,7 @@ public class Aplicacao {
      * - não há atendimentos pendentes
      * - não há equipes disponíveis próximas ao evento
      * - há equipes próximas ao evento, mas todas estão ocupadas
-     * <p>
+     *
      * caso o atendimento seja alocado, retorna null
      */
     public String alocarAtendimento() {
@@ -212,7 +217,6 @@ public class Aplicacao {
         return str.toString();
     }
 
-
     public boolean vincularEquipamentoEquipe(Equipamento equipamento, Equipe equipe) {
         if (equipamento.getEquipe() != null) {
             return false;
@@ -222,28 +226,50 @@ public class Aplicacao {
         return equipe.addEquipamento(equipamento);
     }
 
-    public void lerArquivoEquipes(String arquivo) {
+    public void dadosIniciais() {
+        JOptionPane dialog = new JOptionPane();
+        int opcao = JOptionPane.showConfirmDialog(null, "Deseja carregar os dados iniciais?", "Dados iniciais", JOptionPane.YES_NO_OPTION);
+        if (opcao != JOptionPane.YES_OPTION) return;
+
+        String equipes = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipes");
+        String eventos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de eventos");
+        String atendimentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de atendimentos");
+        String equipamentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipamentos");
+        this.lerArquivoEquipes(equipes);
+        JOptionPane.showMessageDialog(null, "Equipes carregadas com sucesso");
+        this.lerArquivoEventos(eventos);
+        JOptionPane.showMessageDialog(null, "Eventos carregados com sucesso");
+        this.lerArquivoAtendimentos(atendimentos);
+        JOptionPane.showMessageDialog(null, "Atendimentos carregados com sucesso");
+        this.lerArquivosEquipamentos(equipamentos);
+        JOptionPane.showMessageDialog(null, "Equipamentos carregados com sucesso");
+
+        JOptionPane.showMessageDialog(null, "Dados carregados com sucesso");
+    }
+
+    public void lerArquivoEquipes(String arquivo){
+        BufferedReader br;
         Path path = Paths.get(arquivo);
-        try (BufferedReader br = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            br.readLine();
-            String line;
-            while ((line = br.readLine()) != null) {
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            String line = br.readLine();
+            while ((line = br.readLine()) != null){
                 String[] data = line.split(";");
-                this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3])));
+                this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]))) ;
             }
-        } catch (IOException e) {
-            System.out.println("Erro ao ler o arquivo");
-        } catch (NumberFormatException e) {
-            System.out.println("Erro ao formatar String para Número");
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
         }
     }
 
-    public void lerArquivoEventos(String arquivo) {
+    public void lerArquivoEventos(String arquivo){
+        BufferedReader br;
         Path path = Paths.get(arquivo);
-        try (BufferedReader br = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            br.readLine();
-            String line;
-            while ((line = br.readLine()) != null) {
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            String line = br.readLine();
+            while ((line = br.readLine()) != null){
                 String[] data = line.split(";");
                 switch (Integer.parseInt(data[4])) {
                     case 1 ->
@@ -254,37 +280,36 @@ public class Aplicacao {
                             this.addEvento(new Seca(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]), Integer.parseInt(data[5])));
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Erro ao ler o arquivo");
-        } catch (NumberFormatException e) {
-            System.out.println("Erro ao formatar String para Número");
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
         }
     }
 
-    public void lerArquivoAtendimentos(String arquivo) {
+    public void lerArquivoAtendimentos(String arquivo){
+        BufferedReader br;
         Path path = Paths.get(arquivo);
-        try (BufferedReader br = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            br.readLine();
-            String line;
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            String line = br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 Evento evento = this.getEventos().stream().filter((e) -> (e.getCodigo().equals(data[4]))).findFirst().orElse(null);
-                if (evento == null) System.out.println("Evento não encontrado");
-                else
-                    this.addAtendimento(new Atendimento(Integer.parseInt(data[0]), evento.getData(), Integer.parseInt(data[2]), evento));
+                if(evento == null) System.out.println("Evento não encontrado");
+                else this.addAtendimento(new Atendimento(Integer.parseInt(data[0]), evento.getData(), Integer.parseInt(data[2]), evento));
             }
-        } catch (IOException e) {
-            System.out.println("Erro ao ler o arquivo");
-        } catch (NumberFormatException e) {
-            System.out.println("Erro ao formatar String para Número");
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
         }
     }
 
-    public void lerArquivosEquipamentos(String arquivo) {
+    public void lerArquivosEquipamentos(String arquivo){
+        BufferedReader br;
         Path path = Paths.get(arquivo);
-        try (BufferedReader br = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            br.readLine();
-            String line;
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            String line = br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 Equipe e;
@@ -296,7 +321,7 @@ public class Aplicacao {
                         else this.vincularEquipamentoEquipe(this.getEquipamentoById(Integer.parseInt(data[0])), e);
                     }
                     case 2 -> {
-                        this.addEquipamento(new CaminhaoTanque(Integer.parseInt(data[0]), data[1], Double.parseDouble(data[2]), Integer.parseInt(data[5])));
+                        this.addEquipamento(new CaminhaoTanque(Integer.parseInt(data[0]), data[1], Double.parseDouble(data[2]), Double.parseDouble(data[5])));
                         e = this.getEquipes().stream().filter((equipe) -> (equipe.getCodinome().equals(data[3]))).findFirst().orElse(null);
                         if (e == null) System.out.println("Equipe não encontrada");
                         else this.vincularEquipamentoEquipe(this.getEquipamentoById(Integer.parseInt(data[0])), e);
@@ -309,10 +334,9 @@ public class Aplicacao {
                     }
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Erro ao ler o arquivo");
-        } catch (NumberFormatException e) {
-            System.out.println("Erro ao formatar String para Número");
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
         }
     }
 
