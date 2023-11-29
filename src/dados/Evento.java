@@ -1,5 +1,9 @@
 package dados;
 
+import utils.Coordinate;
+
+// TODO: evento precisa saber qual atendimento está atendendo ele
+// também refatorar aplicação
 public class Evento {
 
     private String codigo;
@@ -33,6 +37,9 @@ public class Evento {
         return longitude;
     }
 
+    public Coordinate getCoordinates() {
+        return new Coordinate(latitude, longitude);
+    }
 
     @Override
     public String toString() {

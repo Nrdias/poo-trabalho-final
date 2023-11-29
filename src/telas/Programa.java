@@ -31,7 +31,7 @@ public class Programa extends JFrame {
      */
     private void initMainPanel() {
         this.mainPanel = new JPanel();
-        this.mainPanel.setLayout(new GridLayout(8, 1));
+        this.mainPanel.setLayout(new GridLayout(9, 1));
 
         JLabel title = new JLabel("ACME Resgate :)");
         title.setFont(title.getFont().deriveFont(24.0F));
@@ -67,11 +67,18 @@ public class Programa extends JFrame {
         });
         this.mainPanel.add(mostrarRelatorio);
 
+        JButton alocarAtendimentos = new JButton("Alocar Atendimentos");
+        alocarAtendimentos.addActionListener(e -> {
+            this.changePanel(new AlocarAtendimentos(app));
+        });
+        this.mainPanel.add(alocarAtendimentos);
+
         JButton vincularEquipamentoEquipe = new JButton("Vincular um equipamento a uma equipe");
         vincularEquipamentoEquipe.addActionListener(e -> {
             this.changePanel(new VincularEquipamentoEquipe(app));
         });
         this.mainPanel.add(vincularEquipamentoEquipe);
+
 
         JButton sair = new JButton("Sair");
         sair.addActionListener(e -> {

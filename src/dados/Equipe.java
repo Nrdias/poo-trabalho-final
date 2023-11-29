@@ -1,50 +1,64 @@
 package dados;
 
+import utils.Coordinate;
+
 import java.util.ArrayList;
 
 public class Equipe {
-    private String codinome;
-    private int quantidade;
-    private double latitude;
-    private double longitude;
+	private String codinome;
+	private int quantidade;
+	private double latitude;
+	private double longitude;
+	private Atendimento atendimento;
+	private ArrayList<Equipamento> equipamentos;
 
-    private ArrayList<Equipamento> equipamentos;
+	public Equipe(String codinome, int quantidade, double latitude, double longitude) {
+		this.codinome = codinome;
+		this.quantidade = quantidade;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.equipamentos = new ArrayList<>();
+	}
 
-    public Equipe(String codinome, int quantidade, double latitude, double longitude) {
-        this.codinome = codinome;
-        this.quantidade = quantidade;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.equipamentos = new ArrayList<>();
-    }
+	public String getCodinome() {
+		return codinome;
+	}
 
-    public String getCodinome() {
-        return codinome;
-    }
+	public int getQuantidade() {
+		return quantidade;
+	}
 
-    public int getQuantidade() {
-        return quantidade;
-    }
+	public double getLatitude() {
+		return latitude;
+	}
 
-    public double getLatitude() {
-        return latitude;
-    }
+	public double getLongitude() {
+		return longitude;
+	}
 
-    public double getLongitude() {
-        return longitude;
-    }
+	public boolean addEquipamento(Equipamento equipamento) {
+		boolean idUsed = this.equipamentos.stream().anyMatch(e -> e.getId().equals(equipamento.getId()));
 
-    public boolean addEquipamento(Equipamento equipamento) {
-        boolean idUsed = this.equipamentos.stream().anyMatch(e -> e.getId().equals(equipamento.getId()));
+		if (idUsed) {
+			return false;
+		}
 
-        if (idUsed) {
-            return false;
-        }
+		return this.equipamentos.add(equipamento);
+	}
 
-        return this.equipamentos.add(equipamento);
-    }
+	public Atendimento getAtendimento() {
+		return atendimento;
+	}
 
-    public String toString() {
-        return "Codinome:" + codinome + "\nQuantidade:" + quantidade + "\nLatitude:" + latitude + "\nLongitude:" + longitude + "\nNúmero de equipamentos:" + equipamentos.size() + "\n";
-    }
+	public void setAtendimento(Atendimento atendimento) {
+		this.atendimento = atendimento;
+	}
+
+	public Coordinate getCoordinates() {
+		return new Coordinate(latitude, longitude);
+	}
+
+	public String toString() {
+		return "Codinome:" + codinome + "\nQuantidade:" + quantidade + "\nLatitude:" + latitude + "\nLongitude:" + longitude + "\nNúmero de equipamentos:" + equipamentos.size() + "\n";
+	}
 }
