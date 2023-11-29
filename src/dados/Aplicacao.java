@@ -237,6 +237,32 @@ public class Aplicacao {
         }
     }
 
+    public void lerArquivoEventos(String arquivo){
+        BufferedReader br;
+        Path path = Paths.get(arquivo);
+        try{
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            String line = br.readLine();
+            while ((line = br.readLine()) != null){
+                String[] data = line.split(";");
+                switch (Integer.parseInt(data[4])){
+                    case 1:
+                        this.addEvento(new Ciclone(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[5]), Double.parseDouble(data[6])));
+                        break;
+                    case 2:
+                        this.addEvento(new Terremoto(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[5])));
+                        break;
+                    case 3:
+                        this.addEvento(new Seca(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]), Integer.parseInt(data[5])));
+
+                }
+            }
+        }catch (Exception e){
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("Equipamentos: \n");

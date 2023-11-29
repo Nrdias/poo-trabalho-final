@@ -1,0 +1,10 @@
+identificador;nome;custodiario;codinome;tipo;capacidade_combustivel;carga
+660;ShipTwo;160;Alfa;1;5
+990;ShipThree;190;Golf;1;9
+110;ShipOne;110;Bravo;1;11			
+880;TruckThree;180;Golf;2;12.2
+550;TruckTwo;150;Charlie;2;33.3
+220;TruckOne;120;Foxtrot;2;15.5
+330;BulldozerOne;130;Alfa;3;DIESEL;1.4
+770;BulldozerThree;170;Echo;3;DIESEL;1.7
+440;BulldozerTwo;140;Delta;3;GASOLINA;2.3
