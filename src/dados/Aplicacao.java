@@ -254,7 +254,7 @@ public class Aplicacao {
                 this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]))) ;
             }
         }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número Equipes");
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
             else System.out.println("Erro ao ler o arquivo");
         }
     }
@@ -277,7 +277,7 @@ public class Aplicacao {
                 }
             }
         }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número Eventos");
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
             else System.out.println("Erro ao ler o arquivo");
         }
     }
@@ -295,7 +295,7 @@ public class Aplicacao {
                 else this.addAtendimento(new Atendimento(Integer.parseInt(data[0]), evento.getData(), Integer.parseInt(data[2]), evento));
             }
         }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número Atendimentos");
+            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
             else System.out.println("Erro ao ler o arquivo");
         }
     }
