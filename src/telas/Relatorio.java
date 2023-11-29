@@ -8,8 +8,8 @@ import java.awt.*;
 public class Relatorio extends JPanel {
     Aplicacao app;
 
-    JLabel equipamentosLabel, equipesLabel, eventosLabel, atendimentosLabel;
-    JTextArea equipamentos, equipes, eventos, atendimentos;
+    JLabel equipamentosLabel, equipesLabel, eventosLabel;
+    JTextArea equipamentos, equipes, eventos;
 
     public Relatorio(Aplicacao app) {
         super();
@@ -29,10 +29,6 @@ public class Relatorio extends JPanel {
         this.eventosLabel = new JLabel("Eventos");
         this.eventos = new JTextArea(5, 30);
         this.eventos.setEditable(false);
-
-        this.atendimentosLabel = new JLabel("Atendimentos");
-        this.atendimentos = new JTextArea(5, 30);
-        this.atendimentos.setEditable(false);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -61,27 +57,17 @@ public class Relatorio extends JPanel {
         gc.weighty = 0.9;
         panel.add(new JScrollPane(eventos), gc);
 
-        gc.gridy++;
-        gc.weighty = 0.1;
-        panel.add(atendimentosLabel, gc);
-        gc.gridy++;
-        gc.weighty = 0.9;
-        panel.add(new JScrollPane(atendimentos), gc);
-
         this.setLayout(new BorderLayout());
 
         this.add(new JScrollPane(panel), BorderLayout.CENTER);
 
         handleRelatorio();
-
-
     }
 
     public void handleRelatorio() {
         handleRelatorioEquipamentos();
         handleRelatorioEquipes();
         handleRelatorioEventos();
-        handleRelatorioAtendimentos();
     }
 
     public void handleRelatorioEquipamentos() {
@@ -107,13 +93,4 @@ public class Relatorio extends JPanel {
             eventos.setText("Não há eventos para gerar relatório");
         }
     }
-
-    public void handleRelatorioAtendimentos() {
-        if (app.hasAtendimentos()) {
-            atendimentos.setText(app.atendimentosToString());
-        } else {
-            atendimentos.setText("Não há atendimentos para gerar relatório");
-        }
-    }
-
 }
