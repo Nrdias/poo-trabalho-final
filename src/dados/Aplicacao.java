@@ -4,7 +4,6 @@ import utils.Coordinate;
 
 import javax.swing.*;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
@@ -27,7 +26,6 @@ public class Aplicacao {
         this.eventos = new ArrayList<>();
         this.atendimentos = new ArrayList<>();
         this.atendimentosPendentes = new ArrayDeque<>();
-        dadosIniciais();
     }
 
     public boolean hasEquipamentos() {
@@ -141,7 +139,6 @@ public class Aplicacao {
      * - não há atendimentos pendentes
      * - não há equipes disponíveis próximas ao evento
      * - há equipes próximas ao evento, mas todas estão ocupadas
-     *
      * caso o atendimento seja alocado, retorna null
      */
     public String alocarAtendimento() {
@@ -228,31 +225,50 @@ public class Aplicacao {
         return equipe.addEquipamento(equipamento);
     }
 
-    public void lerArquivoEquipes(String arquivo){
-        BufferedReader br;
-        Path path = Paths.get(arquivo);
-        try{
-            br = Files.newBufferedReader(path, Charset.defaultCharset());
-            br.readLine();
-            String line;
-            while ((line = br.readLine()) != null){
-                String[] data = line.split(";");
-                this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]))) ;
-            }
-        }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
-            else System.out.println("Erro ao ler o arquivo");
-        }
+    public boolean carregarDadosIniciais() {
+        final Path EQUIPES_PATH = Paths.get("src", "files", "EXEMPLO-EQUIPES.CSV").toAbsolutePath();
+        final Path EQUIPAMENTOS_PATH = Paths.get("src",  "files", "EXEMPLO-EQUIPAMENTOS.CSV").toAbsolutePath();
+        final Path EVENTOS_PATH = Paths.get("src", "files", "EXEMPLO-EVENTOS.CSV").toAbsolutePath();
+        final Path ATENDIMENTOS_PATH = Paths.get("src", "files", "EXEMPLO-ATENDIMENTOS.CSV").toAbsolutePath();
+
+        boolean equipes = this.lerArquivoEquipes(EQUIPES_PATH.toString());
+        boolean equipamentos = this.lerArquivosEquipamentos(EQUIPAMENTOS_PATH.toString());
+        boolean eventos = this.lerArquivoEventos(EVENTOS_PATH.toString());
+        boolean atendimentos = this.lerArquivoAtendimentos(ATENDIMENTOS_PATH.toString());
+
+        return equipamentos && equipes && eventos && atendimentos;
     }
 
-    public void lerArquivoEventos(String arquivo){
+    public boolean lerArquivoEquipes(String arquivo) {
         BufferedReader br;
         Path path = Paths.get(arquivo);
-        try{
+        System.out.println("Lendo arquivo: " + path);
+        try {
             br = Files.newBufferedReader(path, Charset.defaultCharset());
             br.readLine();
             String line;
-            while ((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                this.addEquipe(new Equipe(data[0], Integer.parseInt(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3])));
+            }
+        } catch (Exception e) {
+            if (e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+            else System.out.println("Erro ao ler o arquivo");
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean lerArquivoEventos(String arquivo) {
+        BufferedReader br;
+        Path path = Paths.get(arquivo);
+        try {
+            br = Files.newBufferedReader(path, Charset.defaultCharset());
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 switch (Integer.parseInt(data[4])) {
                     case 1 ->
@@ -263,35 +279,42 @@ public class Aplicacao {
                             this.addEvento(new Seca(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]), Integer.parseInt(data[5])));
                 }
             }
-        }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+        } catch (Exception e) {
+            if (e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
             else System.out.println("Erro ao ler o arquivo");
+            return false;
         }
+
+        return true;
     }
 
-    public void lerArquivoAtendimentos(String arquivo){
+    public boolean lerArquivoAtendimentos(String arquivo) {
         BufferedReader br;
         Path path = Paths.get(arquivo);
-        try{
+        try {
             br = Files.newBufferedReader(path, Charset.defaultCharset());
             br.readLine();
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 Evento evento = this.getEventos().stream().filter((e) -> (e.getCodigo().equals(data[4]))).findFirst().orElse(null);
-                if(evento == null) System.out.println("Evento não encontrado");
-                else this.addAtendimento(new Atendimento(Integer.parseInt(data[0]), evento.getData(), Integer.parseInt(data[2]), evento));
+                if (evento == null) System.out.println("Evento não encontrado");
+                else
+                    this.addAtendimento(new Atendimento(Integer.parseInt(data[0]), evento.getData(), Integer.parseInt(data[2]), evento));
             }
-        }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+        } catch (Exception e) {
+            if (e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
             else System.out.println("Erro ao ler o arquivo");
+            return false;
         }
+
+        return true;
     }
 
-    public void lerArquivosEquipamentos(String arquivo){
+    public boolean lerArquivosEquipamentos(String arquivo) {
         BufferedReader br;
         Path path = Paths.get(arquivo);
-        try{
+        try {
             br = Files.newBufferedReader(path, Charset.defaultCharset());
             br.readLine();
             String line;
@@ -319,15 +342,17 @@ public class Aplicacao {
                     }
                 }
             }
-        }catch (Exception e){
-            if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
+        } catch (Exception e) {
+            if (e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
             else System.out.println("Erro ao ler o arquivo");
+            return false;
         }
+        return true;
     }
 
-    public void gravarArquivoEquipes(String arquivo){
+    public void gravarArquivoEquipes(String arquivo) {
         String path = "src/files/" + arquivo + ".csv";
-        try{
+        try {
             FileOutputStream fos = new FileOutputStream(path);
             PrintStream writer = new PrintStream(fos);
             writer.println("Codinome;Quantidade de Membros;Latitude;Longitude");
@@ -336,36 +361,36 @@ public class Aplicacao {
             });
             writer.close();
             JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Erro ao gravar o arquivo");
         }
     }
 
-    public void gravarArquivoEventos(String arquivo){
+    public void gravarArquivoEventos(String arquivo) {
         String path = "src/files/" + arquivo + ".csv";
-        try{
+        try {
             FileOutputStream fos = new FileOutputStream(path);
             PrintStream writer = new PrintStream(fos);
             writer.println("codigo;data;latitude;longitude;tipo;velocidade_magnitude_estiagem;precipitacao");
             this.getEventos().forEach((evento) -> {
-                if(evento instanceof Ciclone){
+                if (evento instanceof Ciclone) {
                     writer.println(evento.getCodigo() + ";" + evento.getData() + ";" + evento.getLatitude() + ";" + evento.getLongitude() + ";" + 1 + ";" + ((Ciclone) evento).getVelocidade() + ";" + ((Ciclone) evento).getPrecipitacao());
-                }else if(evento instanceof Terremoto){
+                } else if (evento instanceof Terremoto) {
                     writer.println(evento.getCodigo() + ";" + evento.getData() + ";" + evento.getLatitude() + ";" + evento.getLongitude() + ";" + 2 + ";" + ((Terremoto) evento).getMagnitude());
-                }else if(evento instanceof Seca){
+                } else if (evento instanceof Seca) {
                     writer.println(evento.getCodigo() + ";" + evento.getData() + ";" + evento.getLatitude() + ";" + evento.getLongitude() + ";" + 3 + ";" + ((Seca) evento).getEstiagem());
                 }
             });
             writer.close();
             JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Erro ao gravar o arquivo");
         }
     }
 
-    public void gravarArquivoAtendimentos(String arquivo){
+    public void gravarArquivoAtendimentos(String arquivo) {
         String path = "src/files/" + arquivo + ".csv";
-        try{
+        try {
             FileOutputStream fos = new FileOutputStream(path);
             PrintStream writer = new PrintStream(fos);
             writer.println("cod;dataInicio;duracao;status;codigo");
@@ -374,53 +399,33 @@ public class Aplicacao {
             });
             writer.close();
             JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Erro ao gravar o arquivo");
         }
     }
 
-    public void gravarArquivoEquipamentos(String arquivo){
+    public void gravarArquivoEquipamentos(String arquivo) {
         String path = "src/files/" + arquivo + ".csv";
-        try{
+        try {
             FileOutputStream fos = new FileOutputStream(path);
             PrintStream writer = new PrintStream(fos);
             writer.println("identificador;nome;custodiario;codinome;tipo;capacidade_combustivel;carga");
             this.getEquipamentos().forEach((equipamento) -> {
-                if(equipamento instanceof Barco){
+                if (equipamento instanceof Barco) {
                     writer.println(equipamento.getId() + ";" + equipamento.getNome() + ";" + equipamento.getCustoDia() + ";" + equipamento.getEquipe().getCodinome() + ";" + 1 + ";" + ((Barco) equipamento).getCapacidade());
-                }else if(equipamento instanceof CaminhaoTanque){
+                } else if (equipamento instanceof CaminhaoTanque) {
                     writer.println(equipamento.getId() + ";" + equipamento.getNome() + ";" + equipamento.getCustoDia() + ";" + equipamento.getEquipe().getCodinome() + ";" + 2 + ";" + ((CaminhaoTanque) equipamento).getCapacidade());
-                }else if(equipamento instanceof Escavadeira){
+                } else if (equipamento instanceof Escavadeira) {
                     writer.println(equipamento.getId() + ";" + equipamento.getNome() + ";" + equipamento.getCustoDia() + ";" + equipamento.getEquipe().getCodinome() + ";" + 3 + ";" + ((Escavadeira) equipamento).getCombustivel() + ";" + ((Escavadeira) equipamento).getCarga());
                 }
             });
             writer.close();
             JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Erro ao gravar o arquivo");
         }
     }
 
-    public void dadosIniciais() {
-        JOptionPane dialog = new JOptionPane();
-        int opcao = JOptionPane.showConfirmDialog(null, "Deseja carregar os dados iniciais?", "Dados iniciais", JOptionPane.YES_NO_OPTION);
-        if (opcao != JOptionPane.YES_OPTION) return;
-
-        String equipes = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipes") + ".csv";
-        String eventos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de eventos") + ".csv";
-        String atendimentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de atendimentos") + ".csv";
-        String equipamentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipamentos") + ".csv";
-        this.lerArquivoEquipes(equipes);
-        JOptionPane.showMessageDialog(null, "Equipes carregadas com sucesso");
-        this.lerArquivoEventos(eventos);
-        JOptionPane.showMessageDialog(null, "Eventos carregados com sucesso");
-        this.lerArquivoAtendimentos(atendimentos);
-        JOptionPane.showMessageDialog(null, "Atendimentos carregados com sucesso");
-        this.lerArquivosEquipamentos(equipamentos);
-        JOptionPane.showMessageDialog(null, "Equipamentos carregados com sucesso");
-
-        JOptionPane.showMessageDialog(null, "Dados carregados com sucesso");
-    }
 
     @Override
     public String toString() {

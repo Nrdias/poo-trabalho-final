@@ -19,7 +19,7 @@ public class Programa extends JFrame {
         this.add(mainPanel);
 
         this.setVisible(true);
-        this.setSize(500, 500);
+        this.setSize(650, 700);
 
 
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -42,16 +42,21 @@ public class Programa extends JFrame {
         topPanel.add(title);
 
         JButton carregarDados = new JButton("Carregar Dados");
+        JButton carregarDadosIniciais = new JButton("Carregar Dados Iniciais");
         JButton salvarDados = new JButton("Salvar Dados");
 
         carregarDados.addActionListener(e -> {
             this.handleCarregarDados();
+        });
+        carregarDadosIniciais.addActionListener(e -> {
+            this.handleCarregarDadosInicias();
         });
         salvarDados.addActionListener(e -> {
             this.handleSalvarDados();
         });
 
         topPanel.add(carregarDados);
+        topPanel.add(carregarDadosIniciais);
         topPanel.add(salvarDados);
 
         this.mainPanel.add(topPanel);
@@ -185,6 +190,19 @@ public class Programa extends JFrame {
                 app.gravarArquivoEquipamentos("equipamentos");
                 app.gravarArquivoAtendimentos("atendimentos");
             }
+        }
+    }
+
+
+    public void handleCarregarDadosInicias() {
+        int opcao = JOptionPane.showConfirmDialog(null, "Deseja carregar os dados iniciais?", "Dados iniciais", JOptionPane.YES_NO_OPTION);
+        if (opcao != JOptionPane.YES_OPTION) return;
+
+        boolean carregou = this.app.carregarDadosIniciais();
+        if (carregou) {
+            JOptionPane.showMessageDialog(null, "Dados carregados com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Não foi possível carregar os dados iniciais");
         }
     }
 
