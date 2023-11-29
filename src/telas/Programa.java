@@ -109,10 +109,10 @@ public class Programa extends JFrame {
         sair.addActionListener(e -> {
             // TODO: mensagem de confirmação?
             int confirmed = JOptionPane.showConfirmDialog(null, "Você realmente quer sair?", ":(", JOptionPane.YES_NO_OPTION);
-
             if (confirmed == JOptionPane.YES_OPTION) {
                 System.exit(0);
             }
+
         });
         this.mainPanel.add(sair);
     }
@@ -128,7 +128,7 @@ public class Programa extends JFrame {
             return;
         }
 
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser("src/files");
         int result = fileChooser.showOpenDialog(null);
 
         if (result != JFileChooser.APPROVE_OPTION) {
@@ -157,6 +157,35 @@ public class Programa extends JFrame {
      * Lida com o evento de salvar os dados
      */
     private void handleSalvarDados() {
+        String[] options = {"Eventos", "Equipes", "Equipamentos", "Atendimentos", "Todos"};
+        int selected = JOptionPane.showOptionDialog(this, "Selecione qual entidade deseja salvar", "Salvar Dados", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, "Equipes");
+
+        if (selected == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser("src/files");
+        int result = fileChooser.showSaveDialog(null);
+
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        String arquivo = fileChooser.getSelectedFile().getName();
+        System.out.println(arquivo);
+
+        switch (selected) {
+            case 0 -> app.gravarArquivoEventos(arquivo);
+            case 1 -> app.gravarArquivoEquipes(arquivo);
+            case 2 -> app.gravarArquivoEquipamentos(arquivo);
+            case 3 -> app.gravarArquivoAtendimentos(arquivo);
+            default -> {
+                app.gravarArquivoEventos("eventos");
+                app.gravarArquivoEquipes("equipes");
+                app.gravarArquivoEquipamentos("equipamentos");
+                app.gravarArquivoAtendimentos("atendimentos");
+            }
+        }
     }
 
 
