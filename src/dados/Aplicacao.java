@@ -2,7 +2,11 @@ package dados;
 
 import utils.Coordinate;
 
+import javax.swing.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +27,7 @@ public class Aplicacao {
         this.eventos = new ArrayList<>();
         this.atendimentos = new ArrayList<>();
         this.atendimentosPendentes = new ArrayDeque<>();
+        dadosIniciais();
     }
 
     public boolean hasEquipamentos() {
@@ -318,6 +323,103 @@ public class Aplicacao {
             if(e instanceof NumberFormatException) System.out.println("Erro ao formatar String para Número");
             else System.out.println("Erro ao ler o arquivo");
         }
+    }
+
+    public void gravarArquivoEquipes(String arquivo){
+        String path = "src/files/" + arquivo + ".csv";
+        try{
+            FileOutputStream fos = new FileOutputStream(path);
+            PrintStream writer = new PrintStream(fos);
+            writer.println("Codinome;Quantidade de Membros;Latitude;Longitude");
+            this.getEquipes().forEach((equipe) -> {
+                writer.println(equipe.getCodinome() + ";" + equipe.getQuantidade() + ";" + equipe.getLatitude() + ";" + equipe.getLongitude());
+            });
+            writer.close();
+            JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
+        }catch (Exception e){
+            System.out.println("Erro ao gravar o arquivo");
+        }
+    }
+
+    public void gravarArquivoEventos(String arquivo){
+        String path = "src/files/" + arquivo + ".csv";
+        try{
+            FileOutputStream fos = new FileOutputStream(path);
+            PrintStream writer = new PrintStream(fos);
+            writer.println("codigo;data;latitude;longitude;tipo;velocidade_magnitude_estiagem;precipitacao");
+            this.getEventos().forEach((evento) -> {
+                if(evento instanceof Ciclone){
+                    writer.println(evento.getCodigo() + ";" + evento.getData() + ";" + evento.getLatitude() + ";" + evento.getLongitude() + ";" + 1 + ";" + ((Ciclone) evento).getVelocidade() + ";" + ((Ciclone) evento).getPrecipitacao());
+                }else if(evento instanceof Terremoto){
+                    writer.println(evento.getCodigo() + ";" + evento.getData() + ";" + evento.getLatitude() + ";" + evento.getLongitude() + ";" + 2 + ";" + ((Terremoto) evento).getMagnitude());
+                }else if(evento instanceof Seca){
+                    writer.println(evento.getCodigo() + ";" + evento.getData() + ";" + evento.getLatitude() + ";" + evento.getLongitude() + ";" + 3 + ";" + ((Seca) evento).getEstiagem());
+                }
+            });
+            writer.close();
+            JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
+        }catch (Exception e){
+            System.out.println("Erro ao gravar o arquivo");
+        }
+    }
+
+    public void gravarArquivoAtendimentos(String arquivo){
+        String path = "src/files/" + arquivo + ".csv";
+        try{
+            FileOutputStream fos = new FileOutputStream(path);
+            PrintStream writer = new PrintStream(fos);
+            writer.println("cod;dataInicio;duracao;status;codigo");
+            this.getAtendimentos().forEach((atendimento) -> {
+                writer.println(atendimento.getCod() + ";" + atendimento.getDataInicio() + ";" + atendimento.getDuracao() + ";" + atendimento.getStatus() + ";" + atendimento.getEvento().getCodigo());
+            });
+            writer.close();
+            JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
+        }catch (Exception e){
+            System.out.println("Erro ao gravar o arquivo");
+        }
+    }
+
+    public void gravarArquivoEquipamentos(String arquivo){
+        String path = "src/files/" + arquivo + ".csv";
+        try{
+            FileOutputStream fos = new FileOutputStream(path);
+            PrintStream writer = new PrintStream(fos);
+            writer.println("identificador;nome;custodiario;codinome;tipo;capacidade_combustivel;carga");
+            this.getEquipamentos().forEach((equipamento) -> {
+                if(equipamento instanceof Barco){
+                    writer.println(equipamento.getId() + ";" + equipamento.getNome() + ";" + equipamento.getCustoDia() + ";" + equipamento.getEquipe().getCodinome() + ";" + 1 + ";" + ((Barco) equipamento).getCapacidade());
+                }else if(equipamento instanceof CaminhaoTanque){
+                    writer.println(equipamento.getId() + ";" + equipamento.getNome() + ";" + equipamento.getCustoDia() + ";" + equipamento.getEquipe().getCodinome() + ";" + 2 + ";" + ((CaminhaoTanque) equipamento).getCapacidade());
+                }else if(equipamento instanceof Escavadeira){
+                    writer.println(equipamento.getId() + ";" + equipamento.getNome() + ";" + equipamento.getCustoDia() + ";" + equipamento.getEquipe().getCodinome() + ";" + 3 + ";" + ((Escavadeira) equipamento).getCombustivel() + ";" + ((Escavadeira) equipamento).getCarga());
+                }
+            });
+            writer.close();
+            JOptionPane.showMessageDialog(null, "Arquivo gravado com sucesso");
+        }catch (Exception e){
+            System.out.println("Erro ao gravar o arquivo");
+        }
+    }
+
+    public void dadosIniciais() {
+        JOptionPane dialog = new JOptionPane();
+        int opcao = JOptionPane.showConfirmDialog(null, "Deseja carregar os dados iniciais?", "Dados iniciais", JOptionPane.YES_NO_OPTION);
+        if (opcao != JOptionPane.YES_OPTION) return;
+
+        String equipes = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipes") + ".csv";
+        String eventos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de eventos") + ".csv";
+        String atendimentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de atendimentos") + ".csv";
+        String equipamentos = "./src/files/" + JOptionPane.showInputDialog("Digite o nome do arquivo de equipamentos") + ".csv";
+        this.lerArquivoEquipes(equipes);
+        JOptionPane.showMessageDialog(null, "Equipes carregadas com sucesso");
+        this.lerArquivoEventos(eventos);
+        JOptionPane.showMessageDialog(null, "Eventos carregados com sucesso");
+        this.lerArquivoAtendimentos(atendimentos);
+        JOptionPane.showMessageDialog(null, "Atendimentos carregados com sucesso");
+        this.lerArquivosEquipamentos(equipamentos);
+        JOptionPane.showMessageDialog(null, "Equipamentos carregados com sucesso");
+
+        JOptionPane.showMessageDialog(null, "Dados carregados com sucesso");
     }
 
     @Override
