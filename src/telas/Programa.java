@@ -4,6 +4,7 @@ import dados.Aplicacao;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class Programa extends JFrame {
     JPanel mainPanel;
@@ -19,7 +20,7 @@ public class Programa extends JFrame {
         this.add(mainPanel);
 
         this.setVisible(true);
-        this.setSize(500, 500);
+        this.setSize(650, 700);
 
 
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -42,16 +43,21 @@ public class Programa extends JFrame {
         topPanel.add(title);
 
         JButton carregarDados = new JButton("Carregar Dados");
+        JButton carregarDadosIniciais = new JButton("Carregar Dados Iniciais");
         JButton salvarDados = new JButton("Salvar Dados");
 
         carregarDados.addActionListener(e -> {
             this.handleCarregarDados();
+        });
+        carregarDadosIniciais.addActionListener(e -> {
+            this.handleCarregarDadosInicias();
         });
         salvarDados.addActionListener(e -> {
             this.handleSalvarDados();
         });
 
         topPanel.add(carregarDados);
+        topPanel.add(carregarDadosIniciais);
         topPanel.add(salvarDados);
 
         this.mainPanel.add(topPanel);
@@ -109,10 +115,10 @@ public class Programa extends JFrame {
         sair.addActionListener(e -> {
             // TODO: mensagem de confirmação?
             int confirmed = JOptionPane.showConfirmDialog(null, "Você realmente quer sair?", ":(", JOptionPane.YES_NO_OPTION);
-
             if (confirmed == JOptionPane.YES_OPTION) {
                 System.exit(0);
             }
+
         });
         this.mainPanel.add(sair);
     }
@@ -128,7 +134,7 @@ public class Programa extends JFrame {
             return;
         }
 
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser("src/files");
         int result = fileChooser.showOpenDialog(null);
 
         if (result != JFileChooser.APPROVE_OPTION) {
@@ -137,19 +143,18 @@ public class Programa extends JFrame {
 
         String path = fileChooser.getSelectedFile().getAbsolutePath();
 
-        switch (selected) {
-            case 0:
-                app.lerArquivoEventos(path);
-                break;
-            case 1:
-                app.lerArquivoEquipes(path);
-                break;
-            case 2:
-                app.lerArquivosEquipamentos(path);
-                break;
-            case 3:
-                app.lerArquivoAtendimentos(path);
-                break;
+        boolean carregou = switch (selected) {
+            case 0 -> app.lerArquivoEventos(path);
+            case 1 -> app.lerArquivoEquipes(path);
+            case 2 -> app.lerArquivosEquipamentos(path);
+            case 3 -> app.lerArquivoAtendimentos(path);
+            default -> false;
+        };
+
+        if (carregou) {
+            JOptionPane.showMessageDialog(null, "Dados carregados com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Não foi possível carregar os dados");
         }
     }
 
@@ -157,6 +162,59 @@ public class Programa extends JFrame {
      * Lida com o evento de salvar os dados
      */
     private void handleSalvarDados() {
+        String[] options = {"Eventos", "Equipes", "Equipamentos", "Atendimentos", "Todos"};
+        int selected = JOptionPane.showOptionDialog(this, "Selecione qual entidade deseja salvar", "Salvar Dados", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, "Equipes");
+
+        if (selected == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser("src/files");
+        int result = fileChooser.showSaveDialog(null);
+
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        String arquivo = fileChooser.getSelectedFile().getAbsolutePath();
+
+        if (selected == 4) {
+            // remove the file name
+            arquivo = arquivo.substring(0, arquivo.lastIndexOf(File.separator) + 1);
+        }
+
+        System.out.println(arquivo);
+
+        boolean gravou = switch (selected) {
+            case 0 -> app.gravarArquivoEventos(arquivo);
+            case 1 -> app.gravarArquivoEquipes(arquivo);
+            case 2 -> app.gravarArquivoEquipamentos(arquivo);
+            case 3 -> app.gravarArquivoAtendimentos(arquivo);
+            case 4 -> app.gravarArquivoEventos(arquivo + "eventos") &&
+                    app.gravarArquivoEquipes(arquivo + "equipes") &&
+                    app.gravarArquivoEquipamentos(arquivo + "equipamentos") &&
+                    app.gravarArquivoAtendimentos(arquivo + "atendimentos");
+            default -> false;
+        };
+
+        if (gravou) {
+            JOptionPane.showMessageDialog(null, "Dados salvos com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Não foi possível salvar os dados");
+        }
+    }
+
+
+    public void handleCarregarDadosInicias() {
+        int opcao = JOptionPane.showConfirmDialog(null, "Deseja carregar os dados iniciais?", "Dados iniciais", JOptionPane.YES_NO_OPTION);
+        if (opcao != JOptionPane.YES_OPTION) return;
+
+        boolean carregou = this.app.carregarDadosIniciais();
+        if (carregou) {
+            JOptionPane.showMessageDialog(null, "Dados carregados com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Não foi possível carregar os dados iniciais");
+        }
     }
 
 
