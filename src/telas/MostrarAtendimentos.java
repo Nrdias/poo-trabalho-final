@@ -35,6 +35,7 @@ public class MostrarAtendimentos extends JPanel {
 
         for (Atendimento atendimento : atendimentos) {
             sb.append(atendimento.toString());
+            sb.append("Custo: R$").append(atendimento.calculaCusto()).append("\n");
             sb.append(atendimento.getEvento().toString());
             if (atendimento.getEquipe() != null) {
                 sb.append(atendimento.getEquipe().toString());
