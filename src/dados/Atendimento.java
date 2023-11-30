@@ -59,7 +59,19 @@ public class Atendimento {
     }
 
     public double calculaCusto() {
-        return 0;
+        if (this.equipe == null) return 0;
+
+        double distancia = this.evento.getCoordinates().getDistanceTo(this.equipe.getCoordinates());
+
+        double custoEquipe = this.duracao * this.equipe.getQuantidade() * 250;
+        double custoEquipamentos = this.equipe.getCustoDiarioEquipamentos() * this.duracao;
+        double custoDeslocamento = distancia / 1000 * (100 * this.equipe.getQuantidade() + 0.1 * custoEquipamentos);
+
+        System.out.println("Custo equipe: " + custoEquipe);
+        System.out.println("Custo equipamentos: " + custoEquipamentos);
+        System.out.println("Custo deslocamento: " + custoDeslocamento);
+
+        return custoEquipe + custoEquipamentos + custoDeslocamento;
     }
 
 

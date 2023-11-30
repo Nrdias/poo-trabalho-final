@@ -54,6 +54,10 @@ public class Equipe {
 		this.atendimento = atendimento;
 	}
 
+	public double getCustoDiarioEquipamentos() {
+		return this.equipamentos.stream().mapToDouble(Equipamento::getCustoDia).sum();
+	}
+
 	public Coordinate getCoordinates() {
 		return new Coordinate(latitude, longitude);
 	}
